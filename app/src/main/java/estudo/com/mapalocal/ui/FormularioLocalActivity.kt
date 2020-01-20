@@ -1,9 +1,10 @@
-package estudo.com.mapalocal
+package estudo.com.mapalocal.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_FORMULARIO_LOCAL
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 

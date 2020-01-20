@@ -1,4 +1,4 @@
-package estudo.com.mapalocal
+package estudo.com.mapalocal.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +13,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
-import estudo.com.mapalocal.constantes.PATH_FORMULARIO
+import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_HOME
 import kotlinx.android.synthetic.main.activity_main.*
 
