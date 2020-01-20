@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/activity_main_menu_search"
+        android:title="Pesquisa"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:icon="@drawable/ic_action_search"
+        android:iconTint="@color/corBranca"
+        app:showAsAction="always"/>
+
+
+
+</menu>
