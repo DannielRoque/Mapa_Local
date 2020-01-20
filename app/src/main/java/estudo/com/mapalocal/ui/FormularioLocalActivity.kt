@@ -30,6 +30,14 @@ class FormularioLocalActivity : AppCompatActivity() {
         myBottomSheetBehavior = BottomSheetBehavior.from(bottomsheet)
         activity_formulario_botao_categoria.setOnClickListener {
             myBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            activity_formulario_botao_categoria.visibility = View.GONE
+            activity_formulario_botao_categoria_down.visibility = View.VISIBLE
+
+            activity_formulario_botao_categoria_down.setOnClickListener {
+                myBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                activity_formulario_botao_categoria.visibility = View.VISIBLE
+                activity_formulario_botao_categoria_down.visibility = View.GONE
+            }
         }
     }
 
