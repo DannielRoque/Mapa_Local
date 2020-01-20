@@ -3,7 +3,8 @@
     <color name="colorPrimary">#2358DF</color>
     <color name="colorPrimaryDark">#02215F</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="corToolbar">#1C3494</color>
+    <color name="corToolbar">#2358DF</color>
     <color name="corBranca">#ffffff</color>
     <color name="corPreta">#000</color>
+    <color name="corBotaoPersonalizado">#D86744</color>
 </resources>

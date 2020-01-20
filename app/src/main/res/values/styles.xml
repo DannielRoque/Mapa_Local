@@ -10,6 +10,7 @@
     <style name="toolbar_theme" parent="AppTheme">
         <item name="colorPrimary">@color/corBranca</item>
         <item name="colorAccent">@color/corBranca</item>
+        <item name="android:textColorSecondary">@color/corBranca</item>
     </style>
 
 </resources>
