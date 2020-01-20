@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -30,8 +31,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -41,18 +40,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+        val search: MenuItem = menu.findItem(R.id.activity_main_menu_search)
+        val searchView: SearchView = search.actionView as SearchView
+        searchView.queryHint = "Busca Local"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.activity_main_menu_search->{
-
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
             }
-        }
-        return super.onOptionsItemSelected(item)
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                //realiza a busca interna
+                return false
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
 
 }
