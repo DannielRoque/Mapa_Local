@@ -13,7 +13,7 @@ class LocalDAO(
 ) : SQLiteOpenHelper(context, name, factory, version) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        val sqlLocal = ""
+        val sqlLocal = "CREATE TABLE local(`id`,`descricao`, `telefone`, `observacao`)"
 
         val sqlCategoria = ""
 
@@ -22,9 +22,9 @@ class LocalDAO(
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        val localSql = ""
+        val localSql = "DROP TABLE IF EXISTS local"
 
-        val categoriaSql = ""
+        val categoriaSql = "DROP TABLE IF EXISTS categoria"
 
         db.execSQL(localSql)
         db.execSQL(categoriaSql)
