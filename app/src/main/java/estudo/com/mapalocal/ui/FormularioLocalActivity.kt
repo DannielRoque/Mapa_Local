@@ -1,11 +1,12 @@
 package estudo.com.mapalocal.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_FORMULARIO_LOCAL
@@ -40,9 +41,29 @@ class FormularioLocalActivity : AppCompatActivity() {
                 myBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 activity_formulario_botao_categoria.visibility = View.VISIBLE
                 activity_formulario_botao_categoria_down.visibility = View.GONE
+
+                myBottomSheetBehavior.setBottomSheetCallback(object :
+                    BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onSlide(bottomSheet: View, slideOfSheet: Float) {}
+
+                    @SuppressLint("SwitchIntDef")
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_HIDDEN -> {
+                                activity_formulario_botao_categoria.visibility = View.VISIBLE
+                                activity_formulario_botao_categoria_down.visibility = View.GONE
+                            }
+                            BottomSheetBehavior.STATE_DRAGGING -> {
+                                activity_formulario_botao_categoria.visibility = View.VISIBLE
+                                activity_formulario_botao_categoria_down.visibility = View.GONE
+                            }
+                        }
+                    }
+                })
             }
         }
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -55,8 +76,8 @@ class FormularioLocalActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_salvar ->{
+        when (item.itemId) {
+            R.id.menu_salvar -> {
                 Toast.makeText(this, "Clique salvar", Toast.LENGTH_LONG).show()
             }
         }

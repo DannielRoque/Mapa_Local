@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import estudo.com.mapalocal.R
+import estudo.com.mapalocal.constantes.HINT_SEARCH
 import estudo.com.mapalocal.constantes.TITLE_HOME
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -49,9 +50,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_main_menu, menu)
+        configuracaoInflaMenu(menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun configuracaoInflaMenu(menu: Menu) {
         val search: MenuItem = menu.findItem(R.id.activity_main_menu_search)
         val searchView: SearchView = search.actionView as SearchView
-        searchView.queryHint = "Busca Local"
+        searchView.queryHint = HINT_SEARCH
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -61,14 +67,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             override fun onQueryTextChange(newText: String?): Boolean {/*realiza a busca interna*/return false
             }
         })
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mapa_dark -> {
                 if (isLight) {
-                    title = "Mapa Diurno"
                     mMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
                             this,
@@ -76,7 +80,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                         )
                     )
                 } else {
-                    title = "Mapa Noturno"
                     mMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
                             this,
