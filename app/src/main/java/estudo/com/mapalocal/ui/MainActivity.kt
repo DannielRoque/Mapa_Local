@@ -11,15 +11,18 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_HOME
+import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private lateinit var mMap: GoogleMap
+    private var isLight = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +30,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        configuraToolbar()
 
-        setSupportActionBar(activity_main_toolbar)
-        supportActionBar?.title = TITLE_HOME
-
+        button_mapa_light_dark.setOnClickListener {
+            if (isLight){
+                button_mapa_light_dark.setImageResource(R.drawable.ic_action_noite)
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_noturno))
+            }else{
+                button_mapa_light_dark.setImageResource(R.drawable.ic_action_dia)
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_sem_novidades))
+            }
+            isLight = !isLight
+        }
     }
 
+    private fun configuraToolbar() {
+        setSupportActionBar(activity_main_toolbar)
+        supportActionBar?.title = TITLE_HOME
+    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap

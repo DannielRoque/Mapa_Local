@@ -18,7 +18,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:titleTextColor="@color/corBranca"/>
+        app:titleTextColor="@color/corBranca" />
+
+    <ImageView
+        android:id="@+id/button_mapa_light_dark"
+        android:layout_width="0dp"
+        android:layout_height="30sp"
+        android:background="@color/corToolbar"
+        android:src="@drawable/ic_action_noite"
+        android:layout_margin="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_mapa_satelital_normal"
+        app:layout_constraintTop_toBottomOf="@id/activity_main_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/map"/>
+
+    <ImageView
+        android:id="@+id/button_mapa_satelital_normal"
+        android:layout_width="0dp"
+        android:layout_height="30sp"
+        android:background="@color/corToolbar"
+        app:layout_constraintStart_toEndOf="@id/button_mapa_light_dark"
+        app:layout_constraintEnd_toStartOf="@id/button_mapa_terrain_normal"
+        app:layout_constraintTop_toTopOf="@id/button_mapa_light_dark"
+        app:layout_constraintBottom_toBottomOf="@id/button_mapa_light_dark"/>
+
+    <ImageView
+        android:id="@+id/button_mapa_terrain_normal"
+        android:layout_width="0dp"
+        android:layout_height="30sp"
+        android:background="@color/corToolbar"
+        app:layout_constraintStart_toEndOf="@id/button_mapa_satelital_normal"
+        app:layout_constraintEnd_toStartOf="@id/button_mapa_hibrido_normal"
+        app:layout_constraintTop_toTopOf="@id/button_mapa_light_dark"
+        app:layout_constraintBottom_toBottomOf="@id/button_mapa_light_dark"/>
+
+    <ImageView
+        android:id="@+id/button_mapa_hibrido_normal"
+        android:layout_width="0dp"
+        android:layout_height="30sp"
+        android:background="@color/corToolbar"
+        app:layout_constraintStart_toEndOf="@id/button_mapa_terrain_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/button_mapa_light_dark"
+        app:layout_constraintBottom_toBottomOf="@id/button_mapa_light_dark"/>
+
 
     <fragment
         android:id="@+id/map"
@@ -27,18 +70,18 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_main_toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/button_mapa_light_dark" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activity_main_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/map"
-        app:layout_constraintVertical_bias="1.0"/>
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
