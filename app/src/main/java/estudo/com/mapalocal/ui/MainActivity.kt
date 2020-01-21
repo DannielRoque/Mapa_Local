@@ -16,7 +16,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_HOME
-import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -31,17 +30,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         configuraToolbar()
-
-        button_mapa_light_dark.setOnClickListener {
-            if (isLight){
-                button_mapa_light_dark.setImageResource(R.drawable.ic_action_noite)
-                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_noturno))
-            }else{
-                button_mapa_light_dark.setImageResource(R.drawable.ic_action_dia)
-                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_sem_novidades))
-            }
-            isLight = !isLight
-        }
     }
 
     private fun configuraToolbar() {
@@ -70,12 +58,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 return false
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                //realiza a busca interna
-                return false
+            override fun onQueryTextChange(newText: String?): Boolean {/*realiza a busca interna*/return false
             }
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.mapa_dark -> {
+                if (isLight) {
+                    title = "Mapa Diurno"
+                    mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                            this,
+                            R.raw.style_noturno
+                        )
+                    )
+                } else {
+                    title = "Mapa Noturno"
+                    mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                            this,
+                            R.raw.style_sem_novidades
+                        )
+                    )
+                }
+                isLight = !isLight
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onMapLongClick(latLng: LatLng) {

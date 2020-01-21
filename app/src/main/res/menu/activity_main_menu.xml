@@ -10,5 +10,17 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|withText" />
 
+    <item android:id="@+id/mapa_dark"
+        android:title="Mapa Noturno"
+        app:showAsAction="collapseActionView"/>
+
+    <item android:id="@+id/mapa_satelite"
+        android:title="Mapa Satélite"
+        app:showAsAction="collapseActionView"/>
+
+    <item android:id="@+id/mapa_terreno"
+        android:title="Mapa Terreno"
+        app:showAsAction="collapseActionView"/>
+
 
 </menu>
