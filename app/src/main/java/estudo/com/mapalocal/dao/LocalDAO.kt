@@ -13,7 +13,7 @@ class LocalDAO(
 ) : SQLiteOpenHelper(context, name, factory, version) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        val sqlLocal = "CREATE TABLE local(`id`,`descricao`, `telefone`, `observacao`)"
+        val sqlLocal = "CREATE TABLE local(id, caminho_imagem, descricao, telefone, observacao)"
 
         val sqlCategoria = ""
 
