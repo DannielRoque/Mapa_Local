@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_FORMULARIO_LOCAL
+import estudo.com.mapalocal.ui.extension.EditTextExtension
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 
 class FormularioLocalActivity : AppCompatActivity() {

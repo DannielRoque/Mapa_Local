@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
         mMap.setOnMapLongClickListener(this)
     }
 
@@ -92,7 +93,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
         return super.onOptionsItemSelected(item)
     }
-
     override fun onMapLongClick(latLng: LatLng) {
         val objectJson = Gson()
         val intentFormulario = Intent(this, FormularioLocalActivity::class.java)
