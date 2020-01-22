@@ -1,25 +1,30 @@
 package estudo.com.mapalocal.ui
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import estudo.com.mapalocal.R
+import estudo.com.mapalocal.constantes.CODE_ERRO
 import estudo.com.mapalocal.constantes.HINT_SEARCH
 import estudo.com.mapalocal.constantes.TITLE_HOME
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
@@ -27,13 +32,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var isLight = true
     private var isSatelite = true
     private var isTerrain = true
+    private var client: FusedLocationProviderClient? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
         configuraToolbar()
     }
 
@@ -45,12 +49,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
+        if (!mMap.equals(null)) {
+            val permission = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            if (permission == PackageManager.PERMISSION_GRANTED) {
+                mMap.isMyLocationEnabled = true
+            }
+        }
+        mMap.uiSettings.isMyLocationButtonEnabled = true
         mMap.setOnMapLongClickListener(this)
     }
 
@@ -77,9 +85,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.mapa_satelite->{configuraMapaSatelital()}
-            R.id.mapa_hibrido ->{configuraMapaHibrido()}
-            R.id.mapa_terreno->{configuraMapaTerreno()}
+            R.id.mapa_satelite -> {
+                configuraMapaSatelital()
+            }
+            R.id.mapa_hibrido -> {
+                configuraMapaHibrido()
+            }
+            R.id.mapa_terreno -> {
+                configuraMapaTerreno()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -122,12 +136,65 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val intentFormulario = Intent(this, FormularioLocalActivity::class.java)
         val objetoTransf = objectJson.toJson(latLng)
 //        intentFormulario.putExtra(objetoTransf, PATH_FORMULARIO)
+        Log.e("Teste", "LongCLick $latLng")
         startActivity(intentFormulario)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            CODE_ERRO -> {
+                Log.e("Teste", "requestCode $requestCode e $CODE_ERRO")
+                if ((grantResults.isEmpty()) or (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
 
-    }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), CODE_ERRO
+                )
+            }
+        } else {
+            val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+            mapFragment.getMapAsync(this)
 
+            client = LocationServices.getFusedLocationProviderClient(this)
+        }
+
+        when (val errorCode =
+            GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)) {
+            ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED,
+            ConnectionResult.SERVICE_DISABLED -> {
+                Log.e("Teste", "Show dialog erro services")
+                GoogleApiAvailability.getInstance().getErrorDialog(this, errorCode, CODE_ERRO)
+                { finish() }.show()
+            }
+            ConnectionResult.SUCCESS -> {
+                Log.e("Teste", "services atualizado")
+            }
+        }
+
+        client?.lastLocation?.addOnSuccessListener { sucess ->
+            sucess?.let {
+                val origem = LatLng(it.latitude, it.longitude)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origem, 15f))
+            }
+        }?.addOnFailureListener { }
+    }
 }
