@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,6 +19,7 @@ import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.HINT_SEARCH
 import estudo.com.mapalocal.constantes.TITLE_HOME
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
@@ -120,6 +123,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val objetoTransf = objectJson.toJson(latLng)
 //        intentFormulario.putExtra(objetoTransf, PATH_FORMULARIO)
         startActivity(intentFormulario)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
 }
