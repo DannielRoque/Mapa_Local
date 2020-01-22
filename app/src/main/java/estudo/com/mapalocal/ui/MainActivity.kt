@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     private lateinit var mMap: GoogleMap
     private var isLight = true
+    private var isSatelite = true
+    private var isTerrain = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,27 +74,46 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.mapa_dark -> {
-                if (isLight) {
-                    mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(
-                            this,
-                            R.raw.style_noturno
-                        )
-                    )
-                } else {
-                    mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(
-                            this,
-                            R.raw.style_sem_novidades
-                        )
-                    )
-                }
-                isLight = !isLight
-            }
+            R.id.mapa_satelite->{configuraMapaSatelital()}
+            R.id.mapa_hibrido ->{configuraMapaHibrido()}
+            R.id.mapa_terreno->{configuraMapaTerreno()}
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun configuraMapaTerreno() {
+        if (isTerrain) {
+            mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        } else {
+            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        }
+        isTerrain = !isTerrain
+        isSatelite = true
+        isLight = true
+    }
+
+    private fun configuraMapaHibrido() {
+        if (isLight) {
+            mMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+        } else {
+            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        }
+        isLight = !isLight
+        isSatelite = true
+        isTerrain = true
+    }
+
+    private fun configuraMapaSatelital() {
+        if (isSatelite) {
+            mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        } else {
+            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        }
+        isSatelite = !isSatelite
+        isLight = true
+        isTerrain = true
+    }
+
     override fun onMapLongClick(latLng: LatLng) {
         val objectJson = Gson()
         val intentFormulario = Intent(this, FormularioLocalActivity::class.java)
