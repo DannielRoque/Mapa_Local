@@ -11,11 +11,11 @@ class LocalDAO(
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
-            "CREATE TABLE LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT, caminho_imagem TEXT, descricao TEXT NOT NULL, telefone TEXT, observacao TEXT)"
+            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT, telefone TEXT, observacao TEXT, latlng TEXT)"
         val sqlCategoria =
-            "CREATE TABLE CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminho_imagem TEXT, descricao TEXT NOT NULL)"
+            "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminho_imagem TEXT, descricao TEXT NOT NULL)"
         val sqlLocalCategoria =
-            "CREATE TABLE LOCAL_HAS_CATEGORIA(local_categoria_id INTEGER PRIMARY KEY AUTOINCREMENT,local_id, categoria_id, CONSTRAINT local_id_local FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), CONSTRAINT categoria_id_categoria FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
+            "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_id INT NOT NULL, categoria_id INT NOT NULL, CONSTRAINT PK_local_has_categoria PRIMARY KEY (local_id, categoria_id), CONSTRAINT FK_local_id FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), CONSTRAINT FK_categoria_id FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
 
         db.execSQL(sqlLocal)
         db.execSQL(sqlCategoria)
@@ -35,7 +35,7 @@ class LocalDAO(
         db.execSQL(localCategoria)
     }
 
-    fun insertCategoria(categoria: Categoria) {
+    fun insertCategoria() {
         val insertCategoria = ""
     }
 
@@ -43,7 +43,7 @@ class LocalDAO(
 
     }
 
-    fun selectCategoria(descricao: String) {
+    fun selectCategoria() {
         val sql = "SELECT descricao FROM sqlCategoria WHERE descricao = "
     }
 

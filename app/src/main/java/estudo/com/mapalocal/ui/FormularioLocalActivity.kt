@@ -1,6 +1,7 @@
 package estudo.com.mapalocal.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +23,15 @@ class FormularioLocalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_formulario_local)
         configuraToolbar()
         configuraButtonSheet()
+
+        vaiParaFormularioCategoria()
+    }
+
+    private fun vaiParaFormularioCategoria() {
+        activity_formulario_categoria_fab.setOnClickListener {
+            val intent = Intent(this, FormularioCategoriaActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun configuraToolbar() {

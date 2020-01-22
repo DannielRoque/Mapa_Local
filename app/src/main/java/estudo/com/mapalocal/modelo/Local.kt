@@ -1,5 +1,6 @@
 package estudo.com.mapalocal.modelo
 
+import com.google.android.gms.maps.model.LatLng
 import java.io.Serializable
 
 class Local(
@@ -7,5 +8,5 @@ class Local(
     val descricao: String = "",
     val telefone: String = "",
     val observacao: String = "",
-    val categoria: Categoria
+    val latLng: LatLng
 ) : Serializable
