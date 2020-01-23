@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_formulario_local.*
 class FormularioLocalHelper(activity: FormularioLocalActivity) {
 
     private val campoImagemLocal: ImageView = activity.activity_formulario_imagem_local
-    private val campoDescricao: TextInputLayout = activity.activity_formulario_descricao
+    private val campoDescricao: TextInputLayout = activity.activity_local_formulario_descricao
     private val campoTelefone: TextInputLayout = activity.activity_formulario_telefone
     private val campoLatLng: TextView = activity.campo_lat_long
     private val local = Local()

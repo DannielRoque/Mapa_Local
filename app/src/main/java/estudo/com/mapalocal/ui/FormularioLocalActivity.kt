@@ -98,7 +98,6 @@ class FormularioLocalActivity : AppCompatActivity() {
     }
 
     private fun configuracaoCamera() {
-        //abaixo acesso a camera
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         caminhoImagem =
             getExternalFilesDir(null).toString() + "/" + System.currentTimeMillis() + ".jpg"
@@ -177,14 +176,14 @@ class FormularioLocalActivity : AppCompatActivity() {
             R.id.menu_salvar -> {
                 val local: Local = helper.pegaLocal()
                 if (local.descricao.isEmpty()) {
-                    activity_formulario_campo_categoria_descricao.error =
+                    activity_local_formulario_descricao.error =
                         "Preencha o campo para prosseguir"
-                    activity_formulario_campo_categoria_descricao.requestFocus()
+                    activity_local_formulario_descricao.requestFocus()
                     val focoTeclado: InputMethodManager =
                         getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     focoTeclado.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
                 } else {
-                    activity_formulario_campo_categoria_descricao.error = null
+                    activity_local_formulario_descricao.error = null
                 }
                 if (!local.caminhoImagem.equals(null)) {
                     Log.e("Teste vazio", "${local.caminhoImagem}")

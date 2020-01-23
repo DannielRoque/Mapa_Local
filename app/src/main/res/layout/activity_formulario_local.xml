@@ -43,7 +43,7 @@
                 android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/activity_formulario_botao_imagem_local"
@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toBottomOf="@id/activity_formulario_imagem_local" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/activity_formulario_descricao"
+                android:id="@+id/activity_local_formulario_descricao"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -80,9 +80,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8sp"
-                app:layout_constraintEnd_toEndOf="@id/activity_formulario_descricao"
-                app:layout_constraintStart_toStartOf="@id/activity_formulario_descricao"
-                app:layout_constraintTop_toBottomOf="@id/activity_formulario_descricao">
+                app:layout_constraintEnd_toEndOf="@id/activity_local_formulario_descricao"
+                app:layout_constraintStart_toStartOf="@id/activity_local_formulario_descricao"
+                app:layout_constraintTop_toBottomOf="@id/activity_local_formulario_descricao">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -209,8 +209,8 @@
                     android:text="Bottom sheet \n\n\nÉ um fato estabelecido há muito tempo que um leitor se distrai com o conteúdo legível de uma página ao examinar seu layout. O objetivo de usar Lorem Ipsum é que ele tem uma distribuição de letras mais ou menos normal, em vez de usar 'Conteúdo aqui, conteúdo aqui', fazendo com que pareça um inglês legível. Muitos pacotes de editoração eletrônica e editores de páginas da web agora usam Lorem Ipsum como texto padrão do modelo, e uma pesquisa por 'lorem ipsum' descobrirá muitos sites ainda na infância. Várias versões evoluíram ao longo dos anos, às vezes por acidente, às vezes de propósito (humor injetado e similares)É um fato estabelecido há muito tempo que um leitor se distrai com o conteúdo legível de uma página ao examinar seu layout. O objetivo de usar Lorem Ipsum é que ele tem uma distribuição de letras mais ou menos normal, em vez de usar 'Conteúdo aqui, conteúdo aqui', fazendo com que pareça um inglês legível. Muitos pacotes de editoração eletrônica e editores de páginas da web agora usam Lorem Ipsum como texto padrão do modelo, e uma pesquisa por 'lorem ipsum' descobrirá muitos sites ainda na infância. Várias versões evoluíram ao longo dos anos, às vezes por acidente, às vezes de propósito (humor injetado e similares).É um fato estabelecido há muito tempo que um leitor se distrai com o conteúdo legível de uma página ao examinar seu layout. O objetivo de usar Lorem Ipsum é que ele tem uma distribuição de letras mais ou menos normal, em vez de usar 'Conteúdo aqui, conteúdo aqui', fazendo com que pareça um inglês legível. Muitos pacotes de editoração eletrônica e editores de páginas da web agora usam Lorem Ipsum como texto padrão do modelo, e uma pesquisa por 'lorem ipsum' descobrirá muitos sites ainda na infância. Várias versões evoluíram ao longo dos anos, às vezes por acidente, às vezes de propósito (humor injetado e similares).É um fato estabelecido há muito tempo que um leitor se distrai com o conteúdo legível de uma página ao examinar seu layout. O objetivo de usar Lorem Ipsum é que ele tem uma distribuição de letras mais ou menos normal, em vez de usar 'Conteúdo aqui, conteúdo aqui', fazendo com que pareça um inglês legível. Muitos pacotes de editoração eletrônica e editores de páginas da web agora usam Lorem Ipsum como texto padrão do modelo, e uma pesquisa por 'lorem ipsum' descobrirá muitos sites ainda na infância. Várias versões evoluíram ao longo dos anos, às vezes por acidente, às vezes de propósito (humor injetado e similares).."
                     android:textAlignment="center"
                     android:textColor="@color/corPreta"
-                    app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_fab"
                     app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_fab"
+                    app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_fab"
                     app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_fab" />
 
 
