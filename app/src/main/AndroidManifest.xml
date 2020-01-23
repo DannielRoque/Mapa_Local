@@ -20,14 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.FormularioCategoriaActivity">
+
+        </activity>
+        <activity android:name=".ui.FormularioLocalActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ui.FormularioLocalActivity" >
-
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -32,6 +32,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+            <ImageView
+                android:id="@+id/activity_formulario_imagem_local"
+                android:layout_width="300dp"
+                android:layout_height="250dp"
+                android:layout_margin="16sp"
+                android:background="@drawable/image"
+                android:contentDescription="@string/imagem_categoria_do_local"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/activity_formulario_botao_imagem_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_picture"
+                app:layout_constraintBottom_toBottomOf="@id/activity_formulario_imagem_local"
+                app:layout_constraintEnd_toEndOf="@id/activity_formulario_imagem_local"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_imagem_local" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/activity_formulario_descricao"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -41,12 +63,12 @@
                 app:layout_constraintBottom_toTopOf="@id/activity_formulario_telefone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_botao_imagem_local">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descricao"
+                    android:hint="@string/descricao"
                     android:inputType="textLongMessage"
                     android:textSize="18sp" />
 
@@ -57,7 +79,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="8sp"
                 app:layout_constraintEnd_toEndOf="@id/activity_formulario_descricao"
                 app:layout_constraintStart_toStartOf="@id/activity_formulario_descricao"
                 app:layout_constraintTop_toBottomOf="@id/activity_formulario_descricao">
@@ -65,25 +87,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Telefone"
-                    android:inputType="textLongMessage"
-                    android:textSize="18sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/activity_formulario_observacao"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10sp"
-                app:layout_constraintEnd_toEndOf="@id/activity_formulario_telefone"
-                app:layout_constraintStart_toStartOf="@id/activity_formulario_telefone"
-                app:layout_constraintTop_toBottomOf="@id/activity_formulario_telefone">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Observacao"
+                    android:hint="@string/telefone"
                     android:inputType="textLongMessage"
                     android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -92,34 +96,34 @@
                 android:id="@+id/activity_formulario_botao_categoria"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="8sp"
                 android:background="@drawable/button_personalizado"
                 android:drawableStart="@drawable/click"
-                android:text="Selecionar Categoria"
+                android:text="@string/selecionar_categoria"
                 android:textAlignment="inherit"
                 android:textColor="@color/corBranca"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/activity_formulario_observacao"
-                app:layout_constraintStart_toStartOf="@id/activity_formulario_observacao"
-                app:layout_constraintTop_toBottomOf="@id/activity_formulario_observacao" />
+                app:layout_constraintEnd_toEndOf="@id/activity_formulario_telefone"
+                app:layout_constraintStart_toStartOf="@id/activity_formulario_telefone"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_telefone" />
 
             <Button
                 android:id="@+id/activity_formulario_botao_categoria_down"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="8sp"
                 android:background="@drawable/button_personalizado"
                 android:drawableStart="@drawable/click"
-                android:text="Selecionar Categoria"
+                android:text="@string/selecionar_categoria"
                 android:textAlignment="inherit"
                 android:textColor="@color/corBranca"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@id/activity_formulario_observacao"
-                app:layout_constraintStart_toStartOf="@id/activity_formulario_observacao"
-                app:layout_constraintTop_toBottomOf="@id/activity_formulario_observacao" />
+                app:layout_constraintEnd_toEndOf="@id/activity_formulario_telefone"
+                app:layout_constraintStart_toStartOf="@id/activity_formulario_telefone"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_telefone" />
 
             <TextView
                 android:id="@+id/campo_lat_long"
@@ -130,7 +134,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/activity_formulario_imagem_categoria"
+                android:id="@+id/activity_local_icone_categoria"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="10sp"
@@ -156,10 +160,10 @@
                 android:textAlignment="center"
                 android:textColor="@color/corPreta"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@id/activity_formulario_imagem_categoria"
+                app:layout_constraintBottom_toBottomOf="@id/activity_local_icone_categoria"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/activity_formulario_imagem_categoria"
-                app:layout_constraintTop_toTopOf="@id/activity_formulario_imagem_categoria" />
+                app:layout_constraintStart_toEndOf="@id/activity_local_icone_categoria"
+                app:layout_constraintTop_toTopOf="@id/activity_local_icone_categoria" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

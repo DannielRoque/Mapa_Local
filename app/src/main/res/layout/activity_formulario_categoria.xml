@@ -29,15 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/activity_formulario_botao_imagem_categoria"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_picture"
-        app:layout_constraintBottom_toBottomOf="@id/activity_formulario_imagem_categoria"
-        app:layout_constraintEnd_toEndOf="@id/activity_formulario_imagem_categoria"
-        app:layout_constraintTop_toBottomOf="@id/activity_formulario_imagem_categoria" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/activity_formulario_descricao_categoria"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -46,7 +37,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_formulario_botao_imagem_categoria">
+        app:layout_constraintTop_toBottomOf="@id/activity_formulario_imagem_categoria">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

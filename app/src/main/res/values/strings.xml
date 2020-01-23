@@ -3,4 +3,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="imagem_categoria_do_local">Imagem Categoria do Local</string>
     <string name="descricao">Descricao</string>
+    <string name="telefone">Telefone</string>
+    <string name="selecionar_categoria">Selecionar Categoria</string>
 </resources>
