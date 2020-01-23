@@ -20,6 +20,7 @@ import androidx.core.content.FileProvider
 import estudo.com.mapalocal.BuildConfig
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.CODE_CAMERA
+import estudo.com.mapalocal.constantes.CODE_GALERY
 import estudo.com.mapalocal.constantes.TITLE_FORMULARIO_CATEGORIA
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.ui.helper.FormularioHelper
@@ -36,10 +37,10 @@ class FormularioCategoriaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_formulario_categoria)
         configuraToolbar()
         helper = FormularioHelper(this)
-        configuracaoCamera()
+        configuracaoGaleriaCamera()
     }
 
-    private fun configuracaoCamera() {
+    private fun configuracaoGaleriaCamera() {
         activity_formulario_botao_imagem_categoria.setOnClickListener {
 
             val options = arrayOf("Galeria", "Camera")
@@ -52,34 +53,42 @@ class FormularioCategoriaActivity : AppCompatActivity() {
             builder.setItems(options) { _, item ->
                 if (options[item].equals("Galeria")) {
                     Toast.makeText(this@FormularioCategoriaActivity, "Galeria", Toast.LENGTH_LONG)
-                        .show()
-                } else if (options[item].equals("Camera")) {
-                    //abaixo acesso a camera
-                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    caminhoImagem =
-                        getExternalFilesDir(null).toString() + "/" + System.currentTimeMillis() + ".jpg"
-                    val arquivoFoto = File(caminhoImagem)
-                    intent.putExtra(
-                        MediaStore.EXTRA_OUTPUT,
-                        FileProvider.getUriForFile(
-                            this@FormularioCategoriaActivity,
-                            BuildConfig.APPLICATION_ID + ".provider",
-                            arquivoFoto
-                        )
-                    )
-                    startActivityForResult(intent, CODE_CAMERA)
+                            val intentGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+                    startActivityForResult(intentGallery, CODE_GALERY)
 
+                } else if (options[item].equals("Camera")) {
+                    configuracaoCamera()
                 }
             }
-
             builder.show()
         }
+    }
+
+    private fun configuracaoCamera() {
+        //abaixo acesso a camera
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        caminhoImagem =
+            getExternalFilesDir(null).toString() + "/" + System.currentTimeMillis() + ".jpg"
+        val arquivoFoto = File(caminhoImagem)
+        intent.putExtra(
+            MediaStore.EXTRA_OUTPUT,
+            FileProvider.getUriForFile(
+                this@FormularioCategoriaActivity,
+                BuildConfig.APPLICATION_ID + ".provider",
+                arquivoFoto
+            )
+        )
+        startActivityForResult(intent, CODE_CAMERA)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CODE_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
                 helper.carregaImagem(caminhoImagem)
+            }
+        }else if(requestCode == CODE_GALERY){
+            if (resultCode == Activity.RESULT_OK){
+                activity_formulario_imagem_categoria.setImageURI(data?.data)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -105,19 +114,21 @@ class FormularioCategoriaActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_salvar -> {
                 Toast.makeText(this, "Clique salvar", Toast.LENGTH_LONG).show()
-                val categoria : Categoria = helper.pegaCategoria()
+                val categoria: Categoria = helper.pegaCategoria()
 
-                if(categoria.descricao.isEmpty()){
-                    activity_formulario_descricao_categoria.error = "Preencha o campo para prosseguir"
+                if (categoria.descricao.isEmpty()) {
+                    activity_formulario_descricao_categoria.error =
+                        "Preencha o campo para prosseguir"
                     activity_formulario_descricao_categoria.requestFocus()
-                    val focoTeclado : InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val focoTeclado: InputMethodManager =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     focoTeclado.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
-                }else{
+                } else {
                     activity_formulario_descricao_categoria.error = null
                 }
-                if (!categoria.caminhoImagem.equals(null)){
+                if (!categoria.caminhoImagem.equals(null)) {
                     Log.e("Teste vazio", "${categoria.caminhoImagem}")
-                }else{
+                } else {
                     Log.e("Teste cheio", "${categoria.caminhoImagem}")
                 }
             }
