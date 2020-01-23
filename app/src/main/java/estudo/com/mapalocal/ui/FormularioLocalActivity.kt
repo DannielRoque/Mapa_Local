@@ -185,7 +185,7 @@ class FormularioLocalActivity : AppCompatActivity() {
                 } else {
                     activity_local_formulario_descricao.error = null
                 }
-                if (!local.caminhoImagem.equals(null)) {
+                if (local.caminhoImagem.equals(null)) {
                     Log.e("Teste vazio", "${local.caminhoImagem}")
                 } else {
                     Log.e("Teste cheio", "${local.caminhoImagem}")
