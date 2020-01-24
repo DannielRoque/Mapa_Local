@@ -20,7 +20,7 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
     private val local = Local()
 
     fun carregaImagem(caminhoFoto: String) {
-        caminhoFoto?.let {
+        caminhoFoto.let {
             val bitmap: Bitmap = BitmapFactory.decodeFile(caminhoFoto)
             val bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 500, 550, true)
             campoImagemLocal.setImageBitmap(bitmapReduzido)

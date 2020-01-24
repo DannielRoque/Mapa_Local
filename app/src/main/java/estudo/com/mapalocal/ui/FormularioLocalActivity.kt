@@ -59,6 +59,10 @@ class FormularioLocalActivity : AppCompatActivity() {
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED)
+                and (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED)
             ) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(
@@ -105,7 +109,7 @@ class FormularioLocalActivity : AppCompatActivity() {
                 val imagePath = getRealPathFromURI(imageUri!!)
                 val file = File(imagePath)
                 Log.e("teste", "path $file")
-                file?.let { file ->
+                file.let { file ->
                     helper.carregaImagem(file.toString())
                 }
 
@@ -212,7 +216,7 @@ class FormularioLocalActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_salvar -> {
-                val local = helper?.pegaLocal()
+                val local = helper.pegaLocal()
 
                 if (local.descricao.isEmpty()) {
                     activity_local_formulario_descricao.error =

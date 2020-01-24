@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.FormularioCategoriaActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/activity_formulario_toolbar_categoria"
@@ -18,26 +23,28 @@
         app:titleTextColor="@color/corBranca" />
 
     <ImageView
-        android:id="@+id/activity_formulario_imagem_categoria"
+        android:id="@+id/activity_formulario_categoria_imagem"
         android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_height="230dp"
         android:layout_margin="16sp"
-        android:background="@drawable/image"
+        android:background="@mipmap/image_tela_categoria"
         android:contentDescription="@string/imagem_categoria_do_local"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria" />
+        app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria"
+        app:layout_constraintBottom_toTopOf="@+id/activity_formulario_categoria_descricao"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/activity_formulario_descricao_categoria"
+        android:id="@+id/activity_formulario_categoria_descricao"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_margin="16sp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_formulario_imagem_categoria">
+        app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_imagem"
+        app:layout_constraintBottom_toTopOf="@id/activity_formulario_recyclerview_categoria">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -47,16 +54,18 @@
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/activity_formulario_recyclerview_categoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/activity_formulario_descricao_categoria"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/activity_formulario_descricao_categoria"
-        app:layout_constraintEnd_toEndOf="@id/activity_formulario_descricao_categoria"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/activity_formulario_recyclerview_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16sp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"
+            app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_descricao"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_descricao" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
