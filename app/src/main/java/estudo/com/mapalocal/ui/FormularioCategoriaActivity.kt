@@ -5,16 +5,26 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_FORMULARIO_CATEGORIA
+import estudo.com.mapalocal.ui.adapter.ActivityCategoriaAdapter
 import kotlinx.android.synthetic.main.activity_formulario_categoria.*
 
 class FormularioCategoriaActivity : AppCompatActivity() {
+
+    private val listaIcon = arrayListOf(R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera) as MutableList<Int>
+    private lateinit var adapter : ActivityCategoriaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_formulario_categoria)
         configuraToolbar()
+
+        adapter = ActivityCategoriaAdapter(listaIcon)
+        activity_formulario_recyclerview_categoria.adapter = adapter
+
     }
 
     private fun configuraToolbar() {
@@ -42,19 +52,3 @@ class FormularioCategoriaActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 }
-
-
-//abaixo acesso a camera
-//val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//caminhoImagem =
-//getExternalFilesDir(null).toString() + "/" + System.currentTimeMillis() + ".jpg"
-//val arquivoFoto = File(caminhoImagem)
-//intent.putExtra(
-//MediaStore.EXTRA_OUTPUT,
-//FileProvider.getUriForFile(
-//this,
-//BuildConfig.APPLICATION_ID + ".provider",
-//arquivoFoto
-//)
-//)
-//startActivityForResult(intent, CODE_CAMERA)

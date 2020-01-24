@@ -61,6 +61,7 @@
             android:layout_margin="16sp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"
             app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_descricao"
