@@ -18,7 +18,7 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
     private val local = Local()
 
     fun carregaImagem(caminhoFoto: String) {
-        if (caminhoFoto != null) {
+        caminhoFoto?.let {
             val bitmap: Bitmap = BitmapFactory.decodeFile(caminhoFoto)
             val bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 500, 550, true)
             campoImagemLocal.setImageBitmap(bitmapReduzido)
@@ -27,7 +27,7 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
     }
 
     fun pegaLocal(): Local {
-        local.caminhoImagem = (campoImagemLocal.tag as String?).toString()
+        local.caminhoImagem = (campoImagemLocal.tag.toString())
         local.descricao = campoDescricao.editText?.text.toString()
         local.telefone = campoTelefone.editText?.text.toString()
         local.latLng = campoLatLng.text.toString()

@@ -6,6 +6,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,6 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -32,6 +35,7 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var caminhoImagem: String
     private lateinit var helper: FormularioLocalHelper
+    lateinit var currImageURI : Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +50,10 @@ class FormularioLocalActivity : AppCompatActivity() {
     private fun configuracaoGaleriaCamera() {
 
         activity_formulario_botao_imagem_local.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            if ((ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                    and (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(
-                        arrayOf(Manifest.permission.CAMERA), CODE_CAMERA
-                    )
+                    requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), CODE_CAMERA)
                 }
             } else {
                 val options = arrayOf(GALERIA, CAMERA)
@@ -78,24 +77,48 @@ class FormularioLocalActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CODE_CAMERA) {
+            if (resultCode == Activity.RESULT_OK) {
+                Log.e("teste", "path $caminhoImagem")
+                helper.carregaImagem(caminhoImagem)
+            }
+        } else if (requestCode == CODE_GALERY) {
+            if (resultCode == Activity.RESULT_OK) {
+                val imageUri = data?.data
+                val imagePath = getRealPathFromURI(imageUri!!)
+                    val file  = File(imagePath)
+                    Log.e("teste", "path $file")
+                file?.let {file ->
+                    helper.carregaImagem(file.toString())
+                }
+
+//                activity_formulario_imagem_local.setImageURI(path)
+
+            }
+        }
+    }
+
+    private fun getRealPathFromURI(contentUri: Uri) : String {
+        var res : String? = null
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor : Cursor? = contentResolver.query(contentUri, proj,null,null,null)
+        if (cursor!!.moveToFirst()){
+            val  idx = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+           res = cursor.getString(idx)
+        }
+        cursor.close()
+        return res!!
+    }
+
     private fun configuracaoGaleria() {
         val intentGallery =
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         startActivityForResult(intentGallery, CODE_GALERY)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CODE_CAMERA) {
-            if (resultCode == Activity.RESULT_OK) {
-                helper.carregaImagem(caminhoImagem)
-            }
-        } else if (requestCode == CODE_GALERY) {
-            if (resultCode == Activity.RESULT_OK) {
-                activity_formulario_imagem_local.setImageURI(data?.data)
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     private fun configuracaoCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -175,6 +198,9 @@ class FormularioLocalActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_salvar -> {
                 val local: Local = helper.pegaLocal()
+                if (local.caminhoImagem.equals(null)){
+                    Toast.makeText(this, "Adicione uma imagem representaiva", Toast.LENGTH_LONG).show()
+                }
                 if (local.descricao.isEmpty()) {
                     activity_local_formulario_descricao.error =
                         "Preencha o campo para prosseguir"
