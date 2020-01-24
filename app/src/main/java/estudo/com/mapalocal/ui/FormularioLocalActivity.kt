@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,7 +27,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import estudo.com.mapalocal.BuildConfig
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.*
-import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 import java.io.File
@@ -35,7 +36,7 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var caminhoImagem: String
     private lateinit var helper: FormularioLocalHelper
-    lateinit var currImageURI : Uri
+    lateinit var currImageURI: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +51,23 @@ class FormularioLocalActivity : AppCompatActivity() {
     private fun configuracaoGaleriaCamera() {
 
         activity_formulario_botao_imagem_local.setOnClickListener {
-            if ((ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                    and (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)){
+            if ((ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED)
+                and (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED)
+            ) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), CODE_CAMERA)
+                    requestPermissions(
+                        arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ), CODE_CAMERA
+                    )
                 }
             } else {
                 val options = arrayOf(GALERIA, CAMERA)
@@ -89,9 +103,9 @@ class FormularioLocalActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val imageUri = data?.data
                 val imagePath = getRealPathFromURI(imageUri!!)
-                    val file  = File(imagePath)
-                    Log.e("teste", "path $file")
-                file?.let {file ->
+                val file = File(imagePath)
+                Log.e("teste", "path $file")
+                file?.let { file ->
                     helper.carregaImagem(file.toString())
                 }
 
@@ -101,13 +115,13 @@ class FormularioLocalActivity : AppCompatActivity() {
         }
     }
 
-    private fun getRealPathFromURI(contentUri: Uri) : String {
-        var res : String? = null
+    private fun getRealPathFromURI(contentUri: Uri): String {
+        var res: String? = null
         val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor : Cursor? = contentResolver.query(contentUri, proj,null,null,null)
-        if (cursor!!.moveToFirst()){
-            val  idx = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-           res = cursor.getString(idx)
+        val cursor: Cursor? = contentResolver.query(contentUri, proj, null, null, null)
+        if (cursor!!.moveToFirst()) {
+            val idx = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            res = cursor.getString(idx)
         }
         cursor.close()
         return res!!
@@ -194,13 +208,12 @@ class FormularioLocalActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_salvar -> {
-                val local: Local = helper.pegaLocal()
-                if (local.caminhoImagem.equals(null)){
-                    Toast.makeText(this, "Adicione uma imagem representaiva", Toast.LENGTH_LONG).show()
-                }
+                val local = helper?.pegaLocal()
+
                 if (local.descricao.isEmpty()) {
                     activity_local_formulario_descricao.error =
                         "Preencha o campo para prosseguir"
@@ -212,10 +225,13 @@ class FormularioLocalActivity : AppCompatActivity() {
                     activity_local_formulario_descricao.error = null
                 }
                 if (local.caminhoImagem.equals(null)) {
+                    activity_formulario_botao_imagem_local.setBackgroundColor(Color.RED)
+                    Toast.makeText(this, "Insira imagem para prosseguir ", Toast.LENGTH_LONG).show()
                     Log.e("Teste vazio", "${local.caminhoImagem}")
                 } else {
                     Log.e("Teste cheio", "${local.caminhoImagem}")
                 }
+                Log.e("teste", "botao salvar")
             }
         }
         return super.onOptionsItemSelected(item)
