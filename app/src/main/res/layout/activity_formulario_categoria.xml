@@ -10,49 +10,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/activity_formulario_toolbar_categoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/corToolbar"
-        android:theme="@style/toolbar_theme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/corBranca" />
-
-    <ImageView
-        android:id="@+id/activity_formulario_categoria_imagem"
-        android:layout_width="250dp"
-        android:layout_height="230dp"
-        android:layout_margin="16sp"
-        android:background="@mipmap/image_tela_categoria"
-        android:contentDescription="@string/imagem_categoria_do_local"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria"
-        app:layout_constraintBottom_toTopOf="@+id/activity_formulario_categoria_descricao"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/activity_formulario_categoria_descricao"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="0dp"
-        android:layout_margin="16sp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_imagem"
-        app:layout_constraintBottom_toTopOf="@id/activity_formulario_recyclerview_categoria">
-
-        <com.google.android.material.textfield.TextInputEditText
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/activity_formulario_toolbar_categoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/descricao"
-            android:inputType="textLongMessage"
-            android:textSize="18sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:background="@color/corToolbar"
+            android:theme="@style/toolbar_theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleTextColor="@color/corBranca" />
+
+        <ImageView
+            android:id="@+id/activity_formulario_categoria_imagem"
+            android:layout_width="250dp"
+            android:layout_height="230dp"
+            android:layout_margin="16sp"
+            android:background="@mipmap/image_tela_categoria"
+            android:contentDescription="@string/imagem_categoria_do_local"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/activity_formulario_categoria_descricao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/activity_formulario_categoria_descricao"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16sp"
+            app:layout_constraintBottom_toTopOf="@id/activity_formulario_recyclerview_categoria"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_imagem">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/descricao"
+                android:inputType="textLongMessage"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activity_formulario_recyclerview_categoria"
@@ -61,11 +60,11 @@
             android:layout_margin="16sp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"
             app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_descricao"
-            app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_descricao" />
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_descricao"
+            app:spanCount="3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
