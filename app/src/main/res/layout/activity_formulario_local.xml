@@ -38,7 +38,6 @@
                 android:layout_width="300dp"
                 android:layout_height="250dp"
                 android:layout_margin="16sp"
-                android:background="@drawable/image_tela_categoria"
                 android:contentDescription="@string/imagem_categoria_do_local"
                 android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -54,6 +53,18 @@
                 app:layout_constraintBottom_toBottomOf="@id/activity_formulario_imagem_local"
                 app:layout_constraintEnd_toEndOf="@id/activity_formulario_imagem_local"
                 app:layout_constraintTop_toBottomOf="@id/activity_formulario_imagem_local" />
+
+            <TextView
+                android:id="@+id/notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Necessário adicionar uma imagem"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/corVermelha"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_imagem_local"
+                app:layout_constraintEnd_toStartOf="@id/activity_formulario_botao_imagem_local"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/activity_local_formulario_descricao"

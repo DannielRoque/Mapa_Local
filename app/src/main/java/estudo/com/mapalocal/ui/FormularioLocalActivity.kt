@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,13 +16,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textfield.TextInputLayout
 import estudo.com.mapalocal.BuildConfig
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.*
@@ -35,6 +35,8 @@ class FormularioLocalActivity : AppCompatActivity() {
 
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var caminhoImagem: String
+    private lateinit var campo_Imagem : ImageView
+    private lateinit var campo_descricao : TextInputLayout
     private lateinit var helper: FormularioLocalHelper
     lateinit var currImageURI: Uri
 
@@ -45,12 +47,16 @@ class FormularioLocalActivity : AppCompatActivity() {
         configuraButtonSheet()
         configuracaoGaleriaCamera()
         vaiParaFormularioCategoria()
+        campo_descricao = activity_local_formulario_descricao
+        campo_Imagem = activity_formulario_imagem_local
         helper = FormularioLocalHelper(this)
+        activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
     }
 
     private fun configuracaoGaleriaCamera() {
 
         activity_formulario_botao_imagem_local.setOnClickListener {
+            notification.visibility = View.GONE
             if ((ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.CAMERA
@@ -216,29 +222,34 @@ class FormularioLocalActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_salvar -> {
+                notification.visibility = View.GONE
                 val local = helper.pegaLocal()
 
-                if (local.descricao.isEmpty()) {
-                    activity_local_formulario_descricao.error =
-                        "Preencha o campo para prosseguir"
-                    activity_local_formulario_descricao.requestFocus()
-                    val focoTeclado: InputMethodManager =
-                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    focoTeclado.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+                if (campo_descricao.editText!!.text.toString().trim().equals("")) {
+                    configuraErroDescricaoVazia()
                 } else {
                     activity_local_formulario_descricao.error = null
-                }
-                if (local.caminhoImagem.equals(null)) {
-                    activity_formulario_botao_imagem_local.setBackgroundColor(Color.RED)
-                    Toast.makeText(this, "Insira imagem para prosseguir ", Toast.LENGTH_LONG).show()
-                    Log.e("Teste vazio", "${local.caminhoImagem}")
-                } else {
-                    Log.e("Teste cheio", "${local.caminhoImagem}")
+                    if (local.caminhoImagem.equals(null)) {
+                        campo_Imagem.setImageResource(R.drawable.notification)
+                        notification.visibility = View.VISIBLE
+                        Log.e("Teste vazio", "${local.caminhoImagem}")
+                    } else {
+                        //continua o filtro pra analisar todos s dados e categoria!
+                        Log.e("Teste cheio", "${local.caminhoImagem}")
+                    }
                 }
                 Log.e("teste", "botao salvar")
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun configuraErroDescricaoVazia() {
+        activity_local_formulario_descricao.error = VAZIO
+        activity_local_formulario_descricao.requestFocus()
+        val focoTeclado: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        focoTeclado.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
     }
 
     override fun onRequestPermissionsResult(
