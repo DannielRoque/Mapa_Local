@@ -10,18 +10,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.TITLE_FORMULARIO_CATEGORIA
 import estudo.com.mapalocal.ui.adapter.ActivityCategoriaAdapter
+import estudo.com.mapalocal.ui.helper.FormularioCategoriaHelper
+import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_categoria.*
 
 class FormularioCategoriaActivity : AppCompatActivity() {
 
-    private val listaIcon = arrayListOf(R.mipmap.camera,R.mipmap.camera,R.mipmap.camera, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.image, R.mipmap.image, R.mipmap.image, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.image, R.mipmap.image, R.mipmap.image, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.image, R.mipmap.image, R.mipmap.image, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.image, R.mipmap.image, R.mipmap.image, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local,R.mipmap.camera,R.mipmap.camera,R.mipmap.camera, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.gallery, R.mipmap.image, R.mipmap.image, R.mipmap.image, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_tela_categoria, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local, R.mipmap.image_click_botao_local) as MutableList<Int>
-    private lateinit var adapter : ActivityCategoriaAdapter
+    lateinit var helper : FormularioCategoriaHelper
+    lateinit var listaIcon : MutableList<Int>
+
+        private lateinit var adapter : ActivityCategoriaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_formulario_categoria)
         configuraToolbar()
-
+        helper = FormularioCategoriaHelper()
+        listaIcon = helper.listaCate
         adapter = ActivityCategoriaAdapter(listaIcon)
         activity_formulario_recyclerview_categoria.adapter = adapter
 

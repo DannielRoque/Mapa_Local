@@ -19,10 +19,11 @@
             app:cardCornerRadius="50dp">
             <ImageView
                 android:id="@+id/item_categoria_imagem"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/image" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="fitXY"
+                android:layout_gravity="center"
+                android:src="@drawable/image" />
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </RelativeLayout>

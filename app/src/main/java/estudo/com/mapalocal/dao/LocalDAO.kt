@@ -11,9 +11,9 @@ class LocalDAO(
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
-            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoImagem TEXT, descricao TEXT, telefone TEXT, latlng TEXT)"
+            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoImagem TEXT, descricao TEXT UNIQUE, telefone TEXT, latlng TEXT)"
         val sqlCategoria =
-            "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoIcone TEXT, descricao TEXT NOT NULL)"
+            "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
         val sqlLocalCategoria =
             "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_id INT NOT NULL, categoria_id INT NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
 
