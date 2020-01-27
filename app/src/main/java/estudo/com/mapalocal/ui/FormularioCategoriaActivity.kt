@@ -87,12 +87,11 @@ class FormularioCategoriaActivity : AppCompatActivity() {
                             caminhoIcone = icon,
                             descricao = campo_descricao.editText!!.text.toString()
                         )
-                        dao.insertCategoria(categoria)
+//                        dao.insertCategoria(categoria)
+                        Log.e(
+                            "teste", "dentro ${campo_descricao.editText!!.text},${(icon)}"
+                        )
                     }
-                    Log.e(
-                        "teste",
-                        "salvar dentro ${campo_descricao.editText!!.text}   ${(icon)}"
-                    )
                 } else {
                     Log.e("teste", "salvar fora $campo_descricao")
                     campo_descricao.error = VAZIO
