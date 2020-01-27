@@ -20,9 +20,12 @@ class LocalDAO(
         val sqlLocalCategoria =
             "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_id INT NOT NULL, categoria_id INT NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
 
+        val sqlInsertCategoria = "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES('R.drawable.bus_pt','Rodoviária'),('R.drawable.coffee_cup_pt','Cafeteria Ramelo'),('R.drawable.fruit_pt','Quitanda Joaquim'),('R.drawable.pig_pt','Leitões Jubeba'),('R.drawable.gym_pt','Olympus Academia')"
+
         db.execSQL(sqlLocal)
         db.execSQL(sqlCategoria)
         db.execSQL(sqlLocalCategoria)
+        db.execSQL(sqlInsertCategoria)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

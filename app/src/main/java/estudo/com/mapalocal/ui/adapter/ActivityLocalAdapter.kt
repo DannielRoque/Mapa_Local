@@ -1,16 +1,19 @@
 package estudo.com.mapalocal.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import estudo.com.mapalocal.R
+import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
 import kotlinx.android.synthetic.main.item_categoria.view.*
 
 class ActivityLocalAdapter(
-    private val listaLocal: MutableList<Local>
+    private val listaLocal: MutableList<Categoria>
 ) : RecyclerView.Adapter<ActivityLocalAdapter.ActivityLoacalViewHolder>() {
 
     private lateinit var onItemCLickListener: OnItemCLickListener
@@ -38,13 +41,13 @@ class ActivityLocalAdapter(
         private val campo_imagem = itemView.item_categoria_imagem
         private val objetoParaEnvio = Gson()
 
-        fun bind(local: Local) {
+        fun bind(categoria: Categoria) {
             itemView.setOnClickListener {
-                val arquivo = objetoParaEnvio.toJson(local)
+                val arquivo = objetoParaEnvio.toJson(categoria)
                 onItemCLickListener.onItemClick(arquivo, layoutPosition)
             }
-
-//            Picasso.with(itemView.context).load(local.imagem)
+            campo_imagem.setImageResource(categoria.caminhoIcone)
+            Log.e("teste", "caminho imagem ${categoria.caminhoIcone}")
         }
     }
 }

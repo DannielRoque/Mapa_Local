@@ -25,6 +25,9 @@ import com.google.android.material.textfield.TextInputLayout
 import estudo.com.mapalocal.BuildConfig
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.*
+import estudo.com.mapalocal.dao.LocalDAO
+import estudo.com.mapalocal.modelo.Categoria
+import estudo.com.mapalocal.ui.adapter.ActivityLocalAdapter
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 import java.io.File
@@ -35,6 +38,9 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var campo_Imagem: ImageView
     private lateinit var campo_descricao: TextInputLayout
     private lateinit var helper: FormularioLocalHelper
+    private val dao = LocalDAO(this)
+    private lateinit var listaCategoria : MutableList<Categoria>
+    private lateinit var adapter : ActivityLocalAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,41 +52,58 @@ class FormularioLocalActivity : AppCompatActivity() {
         campo_Imagem = activity_formulario_imagem_local
         helper = FormularioLocalHelper(this)
         activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
+        listaCategoria = dao.selectAllCategorias()
+        adapter = ActivityLocalAdapter(listaCategoria)
+        formulario_local_recyclerview.adapter = adapter
+        Log.e("teste", "listaCategoria ${listaCategoria[1].caminhoIcone}")
+        //lista trazendo 0 como caminho
+
     }
 
     private fun configuracaoGaleriaCamera() {
 
         activity_formulario_botao_imagem_local.setOnClickListener {
-            notification.visibility = View.GONE
-            if ((ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED)
-                and (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED)
-                and (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED)
-            ) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(
-                        arrayOf(
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                        ), CODE_CAMERA
-                    )
-                }
-            } else {
-                val options = arrayOf(GALERIA, CAMERA)
-                val builder = AlertDialog.Builder(this).setTitle(TITLE_ALERT_CAMERA)
-                configuraAlertDialog(builder, options)
-                builder.show()
-            }
+            configuraPermissaoCamera()
         }
+    }
+
+    private fun configuraPermissaoCamera() {
+        notification.visibility = View.GONE
+        if (configuracaoValidacaoPermissao()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ), CODE_CAMERA
+                )
+            }
+        } else {
+            dialogComGaleriaECamera()
+        }
+    }
+
+    private fun configuracaoValidacaoPermissao(): Boolean {
+        return ((ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) != PackageManager.PERMISSION_GRANTED)
+                and (ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED)
+                and (ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED))
+    }
+
+    private fun dialogComGaleriaECamera() {
+        val options = arrayOf(GALERIA, CAMERA)
+        val builder = AlertDialog.Builder(this).setTitle(TITLE_ALERT_CAMERA)
+        configuraAlertDialog(builder, options)
+        builder.show()
     }
 
     private fun configuraAlertDialog(
@@ -115,7 +138,6 @@ class FormularioLocalActivity : AppCompatActivity() {
                 }
 
 //                activity_formulario_imagem_local.setImageURI(path)
-
             }
         }
     }
