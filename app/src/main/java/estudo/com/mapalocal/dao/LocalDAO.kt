@@ -111,14 +111,15 @@ class LocalDAO(
 
     fun updateLocal(local: Local) {
         val db: SQLiteDatabase = writableDatabase
+        val values : ContentValues = pegaLocal(local)
         val params: Array<String> = arrayOf(local.id.toString())
-        db.delete("LOCAL", "id = ?", params)
+        db.update("LOCAL", values, "id =?", params)
     }
 
     fun deleteLocal(local: Local) {
         val db: SQLiteDatabase = writableDatabase
         val params: Array<String> = arrayOf(local.id.toString())
-        db.delete("LOCAL", "id = ? ", params)
+        db.delete("LOCAL", "id =?", params)
     }
 
     fun selectAllLocal() : MutableList<Local> {
@@ -130,13 +131,11 @@ class LocalDAO(
             while (cursor.moveToNext()){
                 val local = Local()
                 local.id = (cursor.getLong(cursor.getColumnIndex("id")))
-
             }
         }
     cursor.close()
         return locais
     }
-
 
     //configuracao banco local_has_categoria abaixo
 
