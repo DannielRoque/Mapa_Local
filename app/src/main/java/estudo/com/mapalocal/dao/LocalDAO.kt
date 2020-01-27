@@ -1,6 +1,8 @@
 package estudo.com.mapalocal.dao
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import estudo.com.mapalocal.modelo.Categoria
@@ -35,20 +37,58 @@ class LocalDAO(
         db.execSQL(localCategoria)
     }
 
+    //configuracao banco categoria abaixo
+
     fun insertCategoria(categoria: Categoria) {
-        val insertCategoria = ""
+        val db: SQLiteDatabase = writableDatabase
+        val dados: ContentValues = pega_categoria(categoria)
+        db.insert("CATEGORIA", null, dados)
     }
 
-    fun updateCategoria() {
+    private fun pega_categoria(categoria: Categoria): ContentValues {
+        val dados = ContentValues()
+        dados.put("id", categoria.id)
+        dados.put("caminhoIcone", categoria.caminhoIcone)
+        dados.put("descricao", categoria.descricao)
+        return dados
+    }
 
+    fun updateCategoria(categoria: Categoria) {
+        val db : SQLiteDatabase =writableDatabase
+        val values : ContentValues = pega_categoria(categoria)
+
+        val params : Array<String> = arrayOf(categoria.id.toString())
+        db.update("CATEGORIA", values ,"id=?", params)
+    }
+
+    fun delete(categoria: Categoria) {
+        val db: SQLiteDatabase = writableDatabase
+        val params: Array<String> = arrayOf(categoria.id.toString())
+        db.delete("CATEGORIA", "id = ?", params)
     }
 
     fun selectCategoria() {
         val sql = "SELECT descricao FROM sqlCategoria WHERE descricao = "
     }
 
-    fun selectAllCategorias() {
-        val sqlAllCategoria = "SELECT * FROM sqlCategoria"
+    fun selectAllCategorias(): MutableList<Categoria> {
+        val sql = "SELECT * FROM CATEGORIA"
+        val db: SQLiteDatabase = readableDatabase
+        val cursor: Cursor = db.rawQuery(sql, null)
+        val categorias: MutableList<Categoria> = arrayListOf()
 
+        if (!cursor.equals(null)) {
+            while (cursor.moveToNext()) {
+                val categoria = Categoria()
+                categoria.id = (cursor.getInt(cursor.getColumnIndex("id")))
+                categoria.caminhoIcone = (cursor.getInt(cursor.getColumnIndex("caminhoIcone")))
+                categoria.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
+                categorias.add(categoria)
+            }
+        }
+        cursor.close()
+        return categorias
     }
+
+    //configuracao banco Local abaixo
 }
