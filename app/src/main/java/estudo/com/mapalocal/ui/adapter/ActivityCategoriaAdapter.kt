@@ -1,5 +1,6 @@
 package estudo.com.mapalocal.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,7 @@ class ActivityCategoriaAdapter(
         holder.bind(listaIconCategoria[position])
     }
 
-    fun onClickListener(onItemCLickListener: OnItemCLickListener) {
+    fun setOnClickListener(onItemCLickListener: OnItemCLickListener) {
         this.onItemCLickListener = onItemCLickListener
     }
 
@@ -39,6 +40,7 @@ class ActivityCategoriaAdapter(
 
         fun bind(icones: Int) {
             itemView.setOnClickListener {
+                Log.e("teste", "icone $icones")
                 val arquivoJson = objetoJson.toJson(icones)
                 onItemCLickListener.onItemClick(arquivoJson, layoutPosition)
             }

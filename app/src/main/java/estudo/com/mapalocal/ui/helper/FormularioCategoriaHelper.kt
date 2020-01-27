@@ -36,4 +36,5 @@ class FormularioCategoriaHelper {
         R.drawable.gym_pt
     ) as MutableList<Int>
 
+
 }

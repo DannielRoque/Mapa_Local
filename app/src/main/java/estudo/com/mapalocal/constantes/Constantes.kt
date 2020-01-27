@@ -11,3 +11,4 @@ const val CODE_CAMERA = 12
 const val CODE_GALERY = 13
 const val CAMERA = "Camera"
 const val GALERIA = "Galeria"
+const val VAZIO = "Preencha o campo para prosseguir"

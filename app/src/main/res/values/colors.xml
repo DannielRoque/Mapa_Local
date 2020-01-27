@@ -6,5 +6,6 @@
     <color name="corToolbar">#2358DF</color>
     <color name="corBranca">#ffffff</color>
     <color name="corPreta">#000</color>
+    <color name="corVermelha">#E41515</color>
     <color name="corBotaoPersonalizado">#D86744</color>
 </resources>

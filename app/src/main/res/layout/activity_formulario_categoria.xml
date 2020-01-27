@@ -24,15 +24,25 @@
         <ImageView
             android:id="@+id/activity_formulario_categoria_imagem"
             android:layout_width="250dp"
-            android:layout_height="230dp"
+            android:layout_height="250dp"
             android:layout_margin="16sp"
-            android:background="@drawable/image_tela_categoria"
             android:contentDescription="@string/imagem_categoria_do_local"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/activity_formulario_categoria_descricao"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria" />
+        <TextView
+            android:id="@+id/notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Escolha uma categoria abaixo"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/corVermelha"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_imagem"
+            app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_imagem"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/activity_formulario_categoria_descricao"
@@ -50,20 +60,36 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/descricao"
                 android:inputType="textLongMessage"
+                android:minEms="1"
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/categoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Categorias"
+            android:textColor="@color/corPreta"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_descricao"
+            app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"
+            app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_descricao"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activity_formulario_recyclerview_categoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginStart="16sp"
+            android:layout_marginBottom="16sp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"
             app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_descricao"
-            app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_descricao"
+            app:layout_constraintTop_toBottomOf="@id/categoria"
             app:spanCount="3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

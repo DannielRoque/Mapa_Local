@@ -35,7 +35,7 @@ class LocalDAO(
         db.execSQL(localCategoria)
     }
 
-    fun insertCategoria() {
+    fun insertCategoria(categoria: Categoria) {
         val insertCategoria = ""
     }
 
