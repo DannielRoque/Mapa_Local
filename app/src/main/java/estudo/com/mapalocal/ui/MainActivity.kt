@@ -25,6 +25,9 @@ import estudo.com.mapalocal.constantes.CODE_ERRO
 import estudo.com.mapalocal.constantes.HINT_SEARCH
 import estudo.com.mapalocal.constantes.PATH_FORMULARIO
 import estudo.com.mapalocal.constantes.TITLE_HOME
+import estudo.com.mapalocal.dao.LocalDAO
+import estudo.com.mapalocal.modelo.Categoria
+import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -34,12 +37,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var isSatelite = true
     private var isTerrain = true
     private var client: FusedLocationProviderClient? = null
-
+    private lateinit var adapter: ActivityHomeAdapter
+    private val dao = LocalDAO(this)
+    private var listaCategorias: MutableList<Categoria> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         configuraToolbar()
+        configuraListaCategoriasHome()
+
+    }
+
+    private fun configuraListaCategoriasHome() {
+        listaCategorias = dao.selectAllCategorias()
+        adapter = ActivityHomeAdapter(listaCategorias)
+        activity_main_recycler_view.adapter = adapter
     }
 
     private fun configuraToolbar() {
