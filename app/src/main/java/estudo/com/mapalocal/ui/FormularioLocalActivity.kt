@@ -52,6 +52,11 @@ class FormularioLocalActivity : AppCompatActivity() {
         configuraListaRecyclerView()
     }
 
+    override fun onResume() {
+        configuraListaRecyclerView()
+        super.onResume()
+    }
+
     private fun configuraListaRecyclerView() {
         listaCategoria = dao.selectAllCategorias()
         adapter = ActivityLocalAdapter(listaCategoria.toMutableList())
@@ -128,7 +133,6 @@ class FormularioLocalActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CODE_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
-                Log.e("teste", "path $caminhoImagem")
                 helper.carregaImagem(caminhoImagem)
             }
         } else if (requestCode == CODE_GALERY) {
@@ -136,7 +140,6 @@ class FormularioLocalActivity : AppCompatActivity() {
                 val imageUri = data?.data
                 val imagePath = getRealPathFromURI(imageUri!!)
                 val file = File(imagePath)
-                Log.e("teste", "path $file")
                 file.let { file ->
                     helper.carregaImagem(file.toString())
                 }
@@ -216,9 +219,8 @@ class FormularioLocalActivity : AppCompatActivity() {
                     if (local.caminhoImagem.equals(null)) {
                         campo_Imagem.setImageResource(R.drawable.notification)
                         notification.visibility = View.VISIBLE
-                        Log.e("Teste vazio", "${local.caminhoImagem}")
                     } else {
-                        //continua o filtro pra analisar todos s dados e categoria!
+                        //continua o filtro pra analisar todos os dados e categoria!
                         Log.e("Teste cheio", "${local.caminhoImagem}")
                     }
                 }
