@@ -61,6 +61,7 @@
                 android:hint="@string/descricao"
                 android:inputType="textLongMessage"
                 android:minEms="1"
+                android:maxLength="25"
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"
             app:layout_constraintStart_toStartOf="@id/activity_formulario_categoria_descricao"
             app:layout_constraintTop_toBottomOf="@id/categoria"
-            app:spanCount="3" />
+            app:spanCount="5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
