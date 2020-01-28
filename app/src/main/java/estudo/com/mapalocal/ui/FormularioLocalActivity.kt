@@ -73,7 +73,7 @@ class FormularioLocalActivity : AppCompatActivity() {
             override fun onItemClick(view: String, position: Int) {
                 val categoria: Categoria =
                     Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
-                Log.e("teste", "${categoria.id}")
+                Log.e("teste", " ID: ${categoria.id}")
             }
         })
     }
