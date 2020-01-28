@@ -53,9 +53,14 @@ class FormularioLocalActivity : AppCompatActivity() {
         helper = FormularioLocalHelper(this)
         activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
         listaCategoria = dao.selectAllCategorias()
-        adapter = ActivityLocalAdapter(listaCategoria)
+        adapter = ActivityLocalAdapter(listaCategoria.toMutableList())
         formulario_local_recyclerview.adapter = adapter
-        Log.e("teste", "listaCategoria ${listaCategoria[1].caminhoIcone}")
+
+        var listaTeste : MutableList<Int> = arrayListOf()
+        for (lista in listaCategoria){
+            listaTeste.add(lista.caminhoIcone!!)
+        }
+        Log.e("teste", "listaCategoria $listaTeste")
         //lista trazendo 0 como caminho
 
     }

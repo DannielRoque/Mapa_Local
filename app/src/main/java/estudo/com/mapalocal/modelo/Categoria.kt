@@ -4,6 +4,6 @@ import java.io.Serializable
 
 class Categoria(
     var id : Long? = null,
-    var caminhoIcone : Int = 0,
+    var caminhoIcone : Int? = null,
     var descricao : String = ""
 ) : Serializable

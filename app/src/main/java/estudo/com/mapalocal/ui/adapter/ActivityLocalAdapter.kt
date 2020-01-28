@@ -46,7 +46,7 @@ class ActivityLocalAdapter(
                 val arquivo = objetoParaEnvio.toJson(categoria)
                 onItemCLickListener.onItemClick(arquivo, layoutPosition)
             }
-            campo_imagem.setImageResource(categoria.caminhoIcone)
+            categoria.caminhoIcone?.let { campo_imagem.setImageResource(it) }
             Log.e("teste", "caminho imagem ${categoria.caminhoIcone}")
         }
     }

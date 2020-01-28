@@ -20,7 +20,7 @@ class LocalDAO(
         val sqlLocalCategoria =
             "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_id INT NOT NULL, categoria_id INT NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
 
-        val sqlInsertCategoria = "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES('R.drawable.bus_pt','Rodoviária'),('R.drawable.coffee_cup_pt','Cafeteria Ramelo'),('R.drawable.fruit_pt','Quitanda Joaquim'),('R.drawable.pig_pt','Leitões Jubeba'),('R.drawable.gym_pt','Olympus Academia')"
+        val sqlInsertCategoria = "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165290,'Rodoviária'),(2131165299,'Cafeteria Ramelo'),(2131165334,'Quitanda Joaquim'),(2131165378,'Leitões Jubeba'),(2131165339,'Olympus Academia')"
 
         db.execSQL(sqlLocal)
         db.execSQL(sqlCategoria)
