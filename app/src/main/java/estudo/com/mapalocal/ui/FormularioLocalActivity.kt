@@ -39,8 +39,8 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var campo_descricao: TextInputLayout
     private lateinit var helper: FormularioLocalHelper
     private val dao = LocalDAO(this)
-    private lateinit var listaCategoria : MutableList<Categoria>
-    private lateinit var adapter : ActivityLocalAdapter
+    private lateinit var listaCategoria: MutableList<Categoria>
+    private lateinit var adapter: ActivityLocalAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,25 +48,24 @@ class FormularioLocalActivity : AppCompatActivity() {
         configuraToolbar()
         configuracaoGaleriaCamera()
         vaiParaFormularioCategoria()
+        configuraInicializacaoDosCampos()
+        configuraListaRecyclerView()
+    }
+
+    private fun configuraListaRecyclerView() {
+        listaCategoria = dao.selectAllCategorias()
+        adapter = ActivityLocalAdapter(listaCategoria.toMutableList())
+        formulario_local_recyclerview.adapter = adapter
+    }
+
+    private fun configuraInicializacaoDosCampos() {
         campo_descricao = activity_local_formulario_descricao
         campo_Imagem = activity_formulario_imagem_local
         helper = FormularioLocalHelper(this)
         activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
-        listaCategoria = dao.selectAllCategorias()
-        adapter = ActivityLocalAdapter(listaCategoria.toMutableList())
-        formulario_local_recyclerview.adapter = adapter
-
-        var listaTeste : MutableList<Int> = arrayListOf()
-        for (lista in listaCategoria){
-            listaTeste.add(lista.caminhoIcone!!)
-        }
-        Log.e("teste", "listaCategoria $listaTeste")
-        //lista trazendo 0 como caminho
-
     }
 
     private fun configuracaoGaleriaCamera() {
-
         activity_formulario_botao_imagem_local.setOnClickListener {
             configuraPermissaoCamera()
         }
@@ -141,8 +140,6 @@ class FormularioLocalActivity : AppCompatActivity() {
                 file.let { file ->
                     helper.carregaImagem(file.toString())
                 }
-
-//                activity_formulario_imagem_local.setImageURI(path)
             }
         }
     }
@@ -225,7 +222,6 @@ class FormularioLocalActivity : AppCompatActivity() {
                         Log.e("Teste cheio", "${local.caminhoImagem}")
                     }
                 }
-                Log.e("teste", "botao salvar")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -246,7 +242,6 @@ class FormularioLocalActivity : AppCompatActivity() {
     ) {
         when (requestCode) {
             CODE_CAMERA -> {
-                Log.e("Teste", "Camera $CODE_CAMERA")
                 if ((grantResults.isEmpty()) or (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
                     finish()
                 }

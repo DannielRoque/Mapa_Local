@@ -27,7 +27,6 @@ class FormularioCategoriaActivity : AppCompatActivity() {
     private lateinit var campo_imagem: ImageView
     private lateinit var campo_descricao: TextInputLayout
     var icon: Int = 0
-
     private lateinit var adapter: ActivityCategoriaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +76,6 @@ class FormularioCategoriaActivity : AppCompatActivity() {
                 if (campo_descricao.editText!!.text.toString().isNotEmpty() &&
                     !campo_descricao.editText!!.text.toString().trim().equals("")
                 ) {
-
                     if (icon == 0) {
                         campo_imagem.setImageResource(R.drawable.notification)
                         notification.visibility = View.VISIBLE
@@ -87,13 +85,10 @@ class FormularioCategoriaActivity : AppCompatActivity() {
                             caminhoIcone = icon,
                             descricao = campo_descricao.editText!!.text.toString()
                         )
-//                        dao.insertCategoria(categoria)
-                        Log.e(
-                            "teste", "dentro ${campo_descricao.editText!!.text},${(icon)}"
-                        )
+                        dao.insertCategoria(categoria)
+                        finish()
                     }
                 } else {
-                    Log.e("teste", "salvar fora $campo_descricao")
                     campo_descricao.error = VAZIO
                 }
             }

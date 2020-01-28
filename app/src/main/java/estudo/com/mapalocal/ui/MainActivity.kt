@@ -23,6 +23,7 @@ import com.google.gson.Gson
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.CODE_ERRO
 import estudo.com.mapalocal.constantes.HINT_SEARCH
+import estudo.com.mapalocal.constantes.PATH_FORMULARIO
 import estudo.com.mapalocal.constantes.TITLE_HOME
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -135,7 +136,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val objectJson = Gson()
         val intentFormulario = Intent(this, FormularioLocalActivity::class.java)
         val objetoTransf = objectJson.toJson(latLng)
-//        intentFormulario.putExtra(objetoTransf, PATH_FORMULARIO)
+        intentFormulario.putExtra(objetoTransf, PATH_FORMULARIO)
         Log.e("Teste", "LongCLick $latLng")
         startActivity(intentFormulario)
     }
