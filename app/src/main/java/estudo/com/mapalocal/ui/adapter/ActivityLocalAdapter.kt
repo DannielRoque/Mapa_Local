@@ -1,16 +1,12 @@
 package estudo.com.mapalocal.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.squareup.picasso.Picasso
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.modelo.Categoria
-import estudo.com.mapalocal.modelo.Local
-import kotlinx.android.synthetic.main.item_categoria.view.*
 import kotlinx.android.synthetic.main.item_categoria.view.item_categoria_imagem
 import kotlinx.android.synthetic.main.item_categoria_com_descricao.view.*
 
@@ -34,7 +30,7 @@ class ActivityLocalAdapter(
         holder.bind(listaLocal[position])
     }
 
-    fun OnItemCLickListener(onItemCLickListener: OnItemCLickListener) {
+    fun setOnItemCLickListener(onItemCLickListener: OnItemCLickListener) {
         this.onItemCLickListener = onItemCLickListener
     }
 
@@ -51,7 +47,6 @@ class ActivityLocalAdapter(
             }
             categoria.caminhoIcone?.let { campo_imagem.setImageResource(it) }
             categoria.descricao?.let { campo_descricao.text = it }
-            Log.e("teste", "caminho imagem ${categoria.caminhoIcone}")
         }
     }
 }

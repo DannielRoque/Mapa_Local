@@ -22,12 +22,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import estudo.com.mapalocal.BuildConfig
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.*
 import estudo.com.mapalocal.dao.LocalDAO
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.ui.adapter.ActivityLocalAdapter
+import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 import java.io.File
@@ -50,6 +53,8 @@ class FormularioLocalActivity : AppCompatActivity() {
         vaiParaFormularioCategoria()
         configuraInicializacaoDosCampos()
         configuraListaRecyclerView()
+
+
     }
 
     override fun onResume() {
@@ -61,6 +66,16 @@ class FormularioLocalActivity : AppCompatActivity() {
         listaCategoria = dao.selectAllCategorias()
         adapter = ActivityLocalAdapter(listaCategoria.toMutableList())
         formulario_local_recyclerview.adapter = adapter
+        configuraClickItemLista()
+    }
+    fun configuraClickItemLista(){
+        adapter.setOnItemCLickListener(object : OnItemCLickListener {
+            override fun onItemClick(view: String, position: Int) {
+                val categoria: Categoria =
+                    Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
+                Log.e("teste", "${categoria.id}")
+            }
+        })
     }
 
     private fun configuraInicializacaoDosCampos() {
