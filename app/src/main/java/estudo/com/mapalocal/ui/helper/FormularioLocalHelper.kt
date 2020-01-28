@@ -2,11 +2,9 @@ package estudo.com.mapalocal.ui.helper
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputLayout
-import estudo.com.mapalocal.R
 import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.FormularioLocalActivity
 import kotlinx.android.synthetic.main.activity_formulario_local.*
@@ -29,7 +27,6 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
     }
 
     fun pegaLocal(): Local {
-        Log.e("teste", "pegaLocal $campoImagemLocal")
         local.caminhoImagem = campoImagemLocal.tag as String?
         local.descricao = campoDescricao.editText?.text.toString()
         local.telefone = campoTelefone.editText?.text.toString()

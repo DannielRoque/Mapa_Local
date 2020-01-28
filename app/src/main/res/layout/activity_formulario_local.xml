@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:text="Adicionar uma imagem"
+                android:text="Adicione uma imagem"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/corVermelha"
@@ -153,6 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
+                android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/campo_lat_long" />
         </androidx.constraintlayout.widget.ConstraintLayout>

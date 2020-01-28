@@ -84,7 +84,7 @@ class LocalDAO(
         if (!cursor.equals(null)) {
             while (cursor.moveToNext()) {
                 val categoria = Categoria()
-                categoria.id = (cursor.getLong(cursor.getColumnIndex("id")))
+                categoria.id = (cursor.getInt(cursor.getColumnIndex("id")))
                 categoria.caminhoIcone = (cursor.getInt(cursor.getColumnIndex("caminhoIcone")))
                 categoria.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
                 categorias.add(categoria)

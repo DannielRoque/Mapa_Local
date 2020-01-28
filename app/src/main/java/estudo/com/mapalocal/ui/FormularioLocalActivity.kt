@@ -16,6 +16,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -40,8 +42,11 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var caminhoImagem: String
     private lateinit var campo_Imagem: ImageView
     private lateinit var campo_descricao: TextInputLayout
+    private lateinit var campo_latlng: TextView
+    private lateinit var campo_id_categoria: TextView
     private lateinit var helper: FormularioLocalHelper
     private val dao = LocalDAO(this)
+    private var id_icon: Int = 0
     private lateinit var listaCategoria: MutableList<Categoria>
     private lateinit var adapter: ActivityLocalAdapter
 
@@ -53,8 +58,6 @@ class FormularioLocalActivity : AppCompatActivity() {
         vaiParaFormularioCategoria()
         configuraInicializacaoDosCampos()
         configuraListaRecyclerView()
-
-
     }
 
     override fun onResume() {
@@ -68,12 +71,14 @@ class FormularioLocalActivity : AppCompatActivity() {
         formulario_local_recyclerview.adapter = adapter
         configuraClickItemLista()
     }
-    fun configuraClickItemLista(){
+
+    private fun configuraClickItemLista() {
         adapter.setOnItemCLickListener(object : OnItemCLickListener {
             override fun onItemClick(view: String, position: Int) {
                 val categoria: Categoria =
                     Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
-                Log.e("teste", " ID: ${categoria.id}")
+                id_icon = categoria.id!!
+                Log.e("teste", "dentro clique $id_icon")
             }
         })
     }
@@ -81,6 +86,8 @@ class FormularioLocalActivity : AppCompatActivity() {
     private fun configuraInicializacaoDosCampos() {
         campo_descricao = activity_local_formulario_descricao
         campo_Imagem = activity_formulario_imagem_local
+        campo_latlng = campo_lat_long
+        campo_id_categoria = activity_formulario_campo_categoria_id
         helper = FormularioLocalHelper(this)
         activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
     }
@@ -227,16 +234,21 @@ class FormularioLocalActivity : AppCompatActivity() {
                 notification.visibility = View.GONE
                 val local = helper.pegaLocal()
 
-                if (campo_descricao.editText!!.text.toString().trim().equals("")) {
-                    configuraErroDescricaoVazia()
-                } else {
-                    activity_local_formulario_descricao.error = null
-                    if (local.caminhoImagem.equals(null)) {
+                when {
+                    campo_descricao.editText!!.text.toString().trim().equals("") -> {
+                        configuraErroDescricaoVazia()
+                    }
+                    local.caminhoImagem.equals(null) -> {
+                        activity_local_formulario_descricao.error = null
                         campo_Imagem.setImageResource(R.drawable.notification)
                         notification.visibility = View.VISIBLE
-                    } else {
-                        //continua o filtro pra analisar todos os dados e categoria!
-                        Log.e("Teste cheio", "${local.caminhoImagem}")
+                    }
+                    id_icon.equals(0) -> {
+                        Toast.makeText(this, SELECIONA_ICON, Toast.LENGTH_LONG).show()
+                    }
+                    else -> {
+                        Log.e("teste", "id local $id_icon")
+                        Toast.makeText(this, "Ok Salva", Toast.LENGTH_LONG).show()
                     }
                 }
             }

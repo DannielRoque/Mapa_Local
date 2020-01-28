@@ -12,3 +12,4 @@ const val CODE_GALERY = 13
 const val CAMERA = "Camera"
 const val GALERIA = "Galeria"
 const val VAZIO = "Preencha o campo para prosseguir"
+const val SELECIONA_ICON = "Selecione uma Categoria"
