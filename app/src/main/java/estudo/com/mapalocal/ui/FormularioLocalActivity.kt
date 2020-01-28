@@ -247,8 +247,10 @@ class FormularioLocalActivity : AppCompatActivity() {
                         Toast.makeText(this, SELECIONA_ICON, Toast.LENGTH_LONG).show()
                     }
                     else -> {
-                        Log.e("teste", "id local $id_icon")
-                        Toast.makeText(this, "Ok Salva", Toast.LENGTH_LONG).show()
+//                        dao.insertLocal_has_Categoria(local_id = local.id!!, categoria_id = id_icon)
+                        dao.insertLocal(local)
+                        Toast.makeText(this, "Ok Salva ${local.descricao}", Toast.LENGTH_LONG).show()
+                        finish()
                     }
                 }
             }

@@ -46,7 +46,7 @@ class ActivityLocalAdapter(
                 onItemCLickListener.onItemClick(arquivo, layoutPosition)
             }
             categoria.caminhoIcone?.let { campo_imagem.setImageResource(it) }
-            categoria.descricao?.let { campo_descricao.text = it }
+            categoria.descricao.let { campo_descricao.text = it }
         }
     }
 }

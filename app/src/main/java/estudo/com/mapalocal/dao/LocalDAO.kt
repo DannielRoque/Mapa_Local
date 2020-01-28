@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
 
@@ -18,9 +19,10 @@ class LocalDAO(
         val sqlCategoria =
             "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
         val sqlLocalCategoria =
-            "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_id INT NOT NULL, categoria_id INT NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
+            "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_id INTEGER NOT NULL, categoria_id INTEGER NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
 
-        val sqlInsertCategoria = "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165290,'Rodoviária'),(2131165299,'Cafeteria Ramelo'),(2131165334,'Quitanda Joaquim'),(2131165378,'Leitões Jubeba'),(2131165339,'Olympus Academia')"
+        val sqlInsertCategoria =
+            "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165360,'Rodoviária'),(2131165341,'Cafeteria Ramelo'),(2131165321,'Quitanda Joaquim'),(2131165332,'Leitões Jubeba'),(2131165281,'Olympus Academia')"
 
         db.execSQL(sqlLocal)
         db.execSQL(sqlCategoria)
@@ -114,7 +116,7 @@ class LocalDAO(
 
     fun updateLocal(local: Local) {
         val db: SQLiteDatabase = writableDatabase
-        val values : ContentValues = pegaLocal(local)
+        val values: ContentValues = pegaLocal(local)
         val params: Array<String> = arrayOf(local.id.toString())
         db.update("LOCAL", values, "id =?", params)
     }
@@ -125,25 +127,30 @@ class LocalDAO(
         db.delete("LOCAL", "id =?", params)
     }
 
-    fun selectAllLocal() : MutableList<Local> {
+    fun selectAllLocal(): MutableList<Local> {
         val db: SQLiteDatabase = writableDatabase
         val sql = "SELECT * FROM LOCAL"
-        val cursor : Cursor =db.rawQuery(sql, null)
-        val locais : MutableList<Local> = arrayListOf()
-        if(!cursor.equals(null)){
-            while (cursor.moveToNext()){
+        val cursor: Cursor = db.rawQuery(sql, null)
+        val locais: MutableList<Local> = arrayListOf()
+        if (!cursor.equals(null)) {
+            while (cursor.moveToNext()) {
                 val local = Local()
-                local.id = (cursor.getLong(cursor.getColumnIndex("id")))
+                local.id = (cursor.getInt(cursor.getColumnIndex("id")))
             }
         }
-    cursor.close()
+        cursor.close()
         return locais
     }
 
     //configuracao banco local_has_categoria abaixo
 
     fun insertLocal_has_Categoria(local_id: Int, categoria_id: Int) {
-
+        val db : SQLiteDatabase = writableDatabase
+        val dado = ContentValues()
+        dado.put("local_id", local_id)
+        dado.put("categoria_id", categoria_id)
+        db.insert("LOCAL_HAS_CATEGORIA", null, dado)
+        Log.e("teste", "executou $dado")
     }
 
     fun deleteLocal_has_Categoria(local_id: Int, categoria_id: Int) {
