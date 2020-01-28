@@ -15,11 +15,11 @@ class LocalDAO(
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
-            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoImagem TEXT, descricao TEXT UNIQUE, telefone TEXT, latlng TEXT)"
+            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoImagem TEXT, descricao TEXT NOT NULL UNIQUE, telefone TEXT, latlng TEXT)"
         val sqlCategoria =
             "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
         val sqlLocalCategoria =
-            "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_id INTEGER NOT NULL, categoria_id INTEGER NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
+            "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_descricao TEXT NOT NULL, categoria_descricao TEXT NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
 
         val sqlInsertCategoria =
             "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165360,'Rodoviária'),(2131165341,'Cafeteria Ramelo'),(2131165321,'Quitanda Joaquim'),(2131165332,'Leitões Jubeba'),(2131165281,'Olympus Academia')"
@@ -144,11 +144,11 @@ class LocalDAO(
 
     //configuracao banco local_has_categoria abaixo
 
-    fun insertLocal_has_Categoria(local_id: Int, categoria_id: Int) {
+    fun insertLocal_has_Categoria(local_descricao: String, categoria_descricao: String) {
         val db : SQLiteDatabase = writableDatabase
         val dado = ContentValues()
-        dado.put("local_id", local_id)
-        dado.put("categoria_id", categoria_id)
+        dado.put("local_id", local_descricao)
+        dado.put("categoria_id", categoria_descricao)
         db.insert("LOCAL_HAS_CATEGORIA", null, dado)
         Log.e("teste", "executou $dado")
     }

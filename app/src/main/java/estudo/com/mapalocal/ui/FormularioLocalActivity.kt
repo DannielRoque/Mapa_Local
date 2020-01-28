@@ -35,6 +35,7 @@ import estudo.com.mapalocal.ui.adapter.ActivityLocalAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
+import kotlinx.android.synthetic.main.activity_formulario_local.notification
 import java.io.File
 
 class FormularioLocalActivity : AppCompatActivity() {
@@ -72,17 +73,6 @@ class FormularioLocalActivity : AppCompatActivity() {
         configuraClickItemLista()
     }
 
-    private fun configuraClickItemLista() {
-        adapter.setOnItemCLickListener(object : OnItemCLickListener {
-            override fun onItemClick(view: String, position: Int) {
-                val categoria: Categoria =
-                    Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
-                id_icon = categoria.id!!
-                Log.e("teste", "dentro clique $id_icon")
-            }
-        })
-    }
-
     private fun configuraInicializacaoDosCampos() {
         campo_descricao = activity_local_formulario_descricao
         campo_Imagem = activity_formulario_imagem_local
@@ -91,6 +81,19 @@ class FormularioLocalActivity : AppCompatActivity() {
         helper = FormularioLocalHelper(this)
         activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
     }
+
+    private fun configuraClickItemLista() {
+        adapter.setOnItemCLickListener(object : OnItemCLickListener {
+            override fun onItemClick(view: String, position: Int) {
+                val categoria: Categoria =
+                    Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
+                id_icon = categoria.id!!
+                campo_id_categoria.text = categoria.descricao
+                Log.e("teste", "dentro clique $id_icon")
+            }
+        })
+    }
+
 
     private fun configuracaoGaleriaCamera() {
         activity_formulario_botao_imagem_local.setOnClickListener {
@@ -247,8 +250,9 @@ class FormularioLocalActivity : AppCompatActivity() {
                         Toast.makeText(this, SELECIONA_ICON, Toast.LENGTH_LONG).show()
                     }
                     else -> {
-//                        dao.insertLocal_has_Categoria(local_id = local.id!!, categoria_id = id_icon)
                         dao.insertLocal(local)
+                        dao.insertLocal_has_Categoria(local_descricao = local.descricao, categoria_descricao = campo_id_categoria.text.toString())
+                        Log.e("teste", "os ids ${local.descricao} ${campo_id_categoria.text}")
                         Toast.makeText(this, "Ok Salva ${local.descricao}", Toast.LENGTH_LONG).show()
                         finish()
                     }
