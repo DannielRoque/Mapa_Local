@@ -28,7 +28,7 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
 
     fun pegaLocal(): Local {
         local.caminhoImagem = campoImagemLocal.tag as String?
-        local.descricao = campoDescricao.editText?.text.toString()
+        local.descricao = campoDescricao.editText?.text.toString().toLowerCase().replace(" ", "")
         local.telefone = campoTelefone.editText?.text.toString()
         local.latLng = campoLatLng.text.toString()
         return local

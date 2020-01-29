@@ -35,7 +35,6 @@ import estudo.com.mapalocal.ui.adapter.ActivityLocalAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
-import kotlinx.android.synthetic.main.activity_formulario_local.notification
 import java.io.File
 
 class FormularioLocalActivity : AppCompatActivity() {
@@ -251,9 +250,10 @@ class FormularioLocalActivity : AppCompatActivity() {
                     }
                     else -> {
                         dao.insertLocal(local)
-                        dao.insertLocal_has_Categoria(local_descricao = local.descricao, categoria_descricao = campo_id_categoria.text.toString())
-                        Log.e("teste", "os ids ${local.descricao} ${campo_id_categoria.text}")
-                        Toast.makeText(this, "Ok Salva ${local.descricao}", Toast.LENGTH_LONG).show()
+                        dao.insertLocal_has_Categoria(
+                            local_descricao = local.descricao,
+                            categoria_descricao = campo_id_categoria.text.toString()
+                        )
                         finish()
                     }
                 }
