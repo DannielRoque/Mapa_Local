@@ -279,6 +279,8 @@ class FormularioLocalActivity : AppCompatActivity() {
             CODE_CAMERA -> {
                 if ((grantResults.isEmpty()) or (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
                     finish()
+                }else{
+                    dialogComGaleriaECamera()
                 }
             }
         }
