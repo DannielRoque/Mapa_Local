@@ -83,9 +83,10 @@ class FormularioCategoriaActivity : AppCompatActivity() {
                         val dao = LocalDAO(this)
                         val categoria = Categoria(
                             caminhoIcone = icon,
-                            descricao = campo_descricao.editText!!.text.toString()
+                            descricao = campo_descricao.editText!!.text.toString().toLowerCase().replace(" ", "")
                         )
                         dao.insertCategoria(categoria)
+                        Log.e("teste", "lowercase ${categoria.descricao}")
                         finish()
                     }
                 } else {

@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/corFundo"
     android:layout_height="match_parent"
     tools:context=".ui.FormularioCategoriaActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/corFundo"
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
@@ -26,10 +28,11 @@
             android:layout_width="0dp"
             android:layout_height="350dp"
             android:contentDescription="@string/imagem_categoria_do_local"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria" />
+
         <TextView
             android:id="@+id/notification"
             android:layout_width="wrap_content"
@@ -85,6 +88,7 @@
             android:layout_marginStart="16sp"
             android:layout_marginBottom="16sp"
             android:orientation="vertical"
+            android:background="@color/corFundo"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"

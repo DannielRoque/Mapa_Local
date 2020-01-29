@@ -8,6 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/corFundo"
         android:layout_height="match_parent">
 
 
@@ -87,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/descricao"
+                    android:maxLength="32"
                     android:inputType="textLongMessage"
                     android:textSize="18sp" />
 
@@ -106,7 +108,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/telefone"
-                    android:inputType="textLongMessage"
+                    android:inputType="phone"
+                    android:maxLength="11"
                     android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,6 +138,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="16sp"
                 android:layout_marginEnd="16sp"
+                android:background="@color/corFundo"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="4"
                 app:layout_constraintTop_toBottomOf="@id/button_new_categoria"

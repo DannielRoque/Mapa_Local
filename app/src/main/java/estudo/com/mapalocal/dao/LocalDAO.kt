@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.icu.lang.UProperty.LOWERCASE
+import android.icu.text.CaseMap
 import android.util.Log
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
@@ -15,14 +17,14 @@ class LocalDAO(
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
-            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoImagem TEXT, descricao TEXT NOT NULL UNIQUE, telefone TEXT, latlng TEXT)"
+            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoImagem TEXT, descricao TEXT NOT NULL UNIQUE, telefone TEXT, latlng TEXT)"
         val sqlCategoria =
-            "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
+            "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
         val sqlLocalCategoria =
             "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_descricao TEXT NOT NULL, categoria_descricao TEXT NOT NULL, PRIMARY KEY(local_descricao, categoria_descricao), FOREIGN KEY (local_descricao) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_descricao) REFERENCES CATEGORIA(categoria_id))"
 
         val sqlInsertCategoria =
-            "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165360,'Rodoviária'),(2131165341,'Cafeteria Ramelo'),(2131165321,'Quitanda Joaquim'),(2131165332,'Leitões Jubeba'),(2131165281,'Olympus Academia')"
+            "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165360,'rodoviária'),(2131165341,'cafeteria'),(2131165321,'quitanda'),(2131165332,'leitões'),(2131165281,'academia')"
 
         db.execSQL(sqlLocal)
         db.execSQL(sqlCategoria)
@@ -147,8 +149,8 @@ class LocalDAO(
     fun insertLocal_has_Categoria(local_descricao: String, categoria_descricao: String) {
         val db : SQLiteDatabase = writableDatabase
         val dado = ContentValues()
-        dado.put("local_id", local_descricao)
-        dado.put("categoria_id", categoria_descricao)
+        dado.put("local_descricao", local_descricao)
+        dado.put("categoria_descricao", categoria_descricao)
         db.insert("LOCAL_HAS_CATEGORIA", null, dado)
         Log.e("teste", "executou $dado")
     }
