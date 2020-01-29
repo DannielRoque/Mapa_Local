@@ -23,12 +23,10 @@
 
         <ImageView
             android:id="@+id/activity_formulario_categoria_imagem"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_margin="16sp"
+            android:layout_width="0dp"
+            android:layout_height="350dp"
             android:contentDescription="@string/imagem_categoria_do_local"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/activity_formulario_categoria_descricao"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/activity_formulario_toolbar_categoria" />
@@ -49,8 +47,9 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16sp"
-            app:layout_constraintBottom_toTopOf="@id/activity_formulario_recyclerview_categoria"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16sp"
+            android:layout_marginEnd="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/activity_formulario_categoria_imagem">
