@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +22,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -42,7 +42,8 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var caminhoImagem: String
     private lateinit var campo_Imagem: ImageView
     private lateinit var campo_descricao: TextInputLayout
-    private lateinit var campo_latlng: TextView
+    private lateinit var campo_latitude: TextView
+    private lateinit var campo_longitude: TextView
     private lateinit var campo_id_categoria: TextView
     private lateinit var helper: FormularioLocalHelper
     private val dao = LocalDAO(this)
@@ -58,6 +59,15 @@ class FormularioLocalActivity : AppCompatActivity() {
         vaiParaFormularioCategoria()
         configuraInicializacaoDosCampos()
         configuraListaRecyclerView()
+
+        intent?.let { intent ->
+            intent.getStringExtra(PATH_FORMULARIO)?.let { jsonData ->
+                val locallatlng: LatLng =
+                    Gson().fromJson(jsonData, object : TypeToken<LatLng>() {}.type)
+                campo_latitude.text = locallatlng.latitude.toString()
+                campo_longitude.text = locallatlng.longitude.toString()
+            }
+        }
     }
 
     override fun onResume() {
@@ -75,7 +85,8 @@ class FormularioLocalActivity : AppCompatActivity() {
     private fun configuraInicializacaoDosCampos() {
         campo_descricao = activity_local_formulario_descricao
         campo_Imagem = activity_formulario_imagem_local
-        campo_latlng = campo_lat_long
+        campo_latitude = local_campo_latitude
+        campo_longitude = local_campo_longitude
         campo_id_categoria = activity_formulario_campo_categoria_id
         helper = FormularioLocalHelper(this)
         activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
@@ -88,7 +99,6 @@ class FormularioLocalActivity : AppCompatActivity() {
                     Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
                 id_icon = categoria.id!!
                 campo_id_categoria.text = categoria.descricao
-                Log.e("teste", "dentro clique $id_icon")
             }
         })
     }
@@ -279,7 +289,7 @@ class FormularioLocalActivity : AppCompatActivity() {
             CODE_CAMERA -> {
                 if ((grantResults.isEmpty()) or (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
                     finish()
-                }else{
+                } else {
                     dialogComGaleriaECamera()
                 }
             }

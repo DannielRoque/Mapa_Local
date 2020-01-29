@@ -15,7 +15,7 @@ class LocalDAO(
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
-            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoImagem TEXT, descricao TEXT NOT NULL UNIQUE, telefone TEXT, latlng TEXT)"
+            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoImagem TEXT, descricao TEXT NOT NULL UNIQUE, telefone TEXT, latitude TEXT, longitude TEXT)"
         val sqlCategoria =
             "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
         val sqlLocalCategoria =
@@ -102,6 +102,7 @@ class LocalDAO(
         val db: SQLiteDatabase = writableDatabase
         val dados: ContentValues = pegaLocal(local)
         db.insert("LOCAL", null, dados)
+        Log.e("teste", "dados local $dados")
     }
 
     private fun pegaLocal(local: Local): ContentValues {
@@ -110,7 +111,8 @@ class LocalDAO(
         dados.put("caminhoImagem", local.caminhoImagem)
         dados.put("descricao", local.descricao)
         dados.put("telefone", local.telefone)
-        dados.put("latlng", local.latLng)
+        dados.put("latitude", local.latitude)
+        dados.put("longitude", local.longitude)
         return dados
     }
 
@@ -161,8 +163,8 @@ class LocalDAO(
         Log.e("teste", "descricao entrada $descricaoSelecionada")
         if (descricaoSelecionada.equals(null)) return null
         val db: SQLiteDatabase = readableDatabase
-        val sql ="SELECT l.* FROM LOCAL_HAS_CATEGORIA as lc INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao WHERE c.descricao = '$descricaoSelecionada'"
-        Log.e("teste", "abaixo select $sql")
+        val sql =
+            "SELECT l.* FROM LOCAL_HAS_CATEGORIA as lc INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao WHERE c.descricao = '$descricaoSelecionada'"
         val cursor: Cursor = db.rawQuery(sql, null)
         val locaisSelecionados: MutableList<Local> = arrayListOf()
         if (!cursor.equals(null)) {
@@ -172,12 +174,12 @@ class LocalDAO(
                 local.caminhoImagem = (cursor.getString(cursor.getColumnIndex("caminhoImagem")))
                 local.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
                 local.telefone = (cursor.getString(cursor.getColumnIndex("telefone")))
-                local.latLng = (cursor.getString(cursor.getColumnIndex("latlng")))
+                local.latitude = (cursor.getString(cursor.getColumnIndex("latitude")))
+                local.longitude = (cursor.getString(cursor.getColumnIndex("longitude")))
                 locaisSelecionados.add(local)
             }
         }
         cursor.close()
-                Log.e("teste", "locais selecionados $locaisSelecionados")
         return locaisSelecionados
     }
 }

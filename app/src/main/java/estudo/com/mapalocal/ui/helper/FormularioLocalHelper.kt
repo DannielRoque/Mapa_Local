@@ -14,7 +14,8 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
     private val campoImagemLocal: ImageView = activity.activity_formulario_imagem_local
     private val campoDescricao: TextInputLayout = activity.activity_local_formulario_descricao
     private val campoTelefone: TextInputLayout = activity.activity_formulario_telefone
-    private val campoLatLng: TextView = activity.campo_lat_long
+    private val campoLatitude: TextView = activity.local_campo_latitude
+    private val campoLongitude: TextView = activity.local_campo_longitude
     private val local = Local()
 
     fun carregaImagem(caminhoFoto: String) {
@@ -30,7 +31,8 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
         local.caminhoImagem = campoImagemLocal.tag as String?
         local.descricao = campoDescricao.editText?.text.toString().toLowerCase().replace(" ", "")
         local.telefone = campoTelefone.editText?.text.toString()
-        local.latLng = campoLatLng.text.toString()
+        local.latitude = campoLatitude.text.toString()
+        local.longitude = campoLongitude.text.toString()
         return local
     }
 }

@@ -33,10 +33,14 @@ import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Double.parseDouble
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private lateinit var mMap: GoogleMap
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+    lateinit var latlong : LatLng
     private var isLight = true
     private var isSatelite = true
     private var isTerrain = true
@@ -145,7 +149,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val objectJson = Gson()
         val intentFormulario = Intent(this, FormularioLocalActivity::class.java)
         val objetoTransf = objectJson.toJson(latLng)
-        intentFormulario.putExtra(objetoTransf, PATH_FORMULARIO)
+        intentFormulario.putExtra(PATH_FORMULARIO, objetoTransf)
         Log.e("Teste", "LongCLick $latLng")
         startActivity(intentFormulario)
     }
@@ -209,6 +213,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             }
         }?.addOnFailureListener { }
     }
+
     private fun configuraListaCategoriasHome() {
         listaCategorias = dao.selectAllCategorias()
         adapter = ActivityHomeAdapter(listaCategorias)
@@ -218,17 +223,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private fun configuraCliqueListaCategoria() {
         adapter.setOnItemClickListener(object : OnItemCLickListener {
             override fun onItemClick(view: String, position: Int) {
-                val categoria : Categoria = Gson().fromJson(view, object : TypeToken<Categoria>() {}.type )
-                val dados =
-                    dao.buscaTodosLocaisClicandoCategoria(categoria.descricao)
+                val categoria: Categoria =
+                    Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
+                val dados = dao.buscaTodosLocaisClicandoCategoria(categoria.descricao)
                 Log.e("teste", "click: ${dados.toString()}")
-                if (dados!=null) {
+
+                if (dados != null) {
                     mMap.clear()
                     for (m in dados) {
-                        Toast.makeText(this@MainActivity, "local ${m.descricao},${m.latLng},${m.id}", Toast.LENGTH_LONG).show()
+                        latitude = parseDouble(m.latitude)
+                        longitude = parseDouble(m.longitude)
+                        latlong = LatLng(latitude, longitude)
+                        mMap.addMarker(MarkerOptions().position(latlong))
+                        Toast.makeText(
+                            this@MainActivity,
+                            "local ${m.descricao},${m.latitude} ${m.longitude}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-                }else{
-                    Log.e("teste", "fora $dados")
                 }
             }
         })

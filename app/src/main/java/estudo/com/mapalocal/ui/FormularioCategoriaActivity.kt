@@ -1,7 +1,6 @@
 package estudo.com.mapalocal.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -47,7 +46,6 @@ class FormularioCategoriaActivity : AppCompatActivity() {
         adapter.setOnClickListener(object : OnItemCLickListener {
             override fun onItemClick(view: String, position: Int) {
                 icon = Gson().fromJson(view, object : TypeToken<Int>() {}.type)
-                Log.e("Teste", " $view")
                 campo_imagem.setImageResource(icon)
             }
         })
@@ -83,10 +81,12 @@ class FormularioCategoriaActivity : AppCompatActivity() {
                         val dao = LocalDAO(this)
                         val categoria = Categoria(
                             caminhoIcone = icon,
-                            descricao = campo_descricao.editText!!.text.toString().toLowerCase().replace(" ", "")
+                            descricao = campo_descricao.editText!!.text.toString().toLowerCase().replace(
+                                " ",
+                                ""
+                            )
                         )
                         dao.insertCategoria(categoria)
-                        Log.e("teste", "lowercase ${categoria.descricao}")
                         finish()
                     }
                 } else {
