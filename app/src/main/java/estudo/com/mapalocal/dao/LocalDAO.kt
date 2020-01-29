@@ -138,6 +138,12 @@ class LocalDAO(
             while (cursor.moveToNext()) {
                 val local = Local()
                 local.id = (cursor.getInt(cursor.getColumnIndex("id")))
+                local.caminhoImagem = (cursor.getString(cursor.getColumnIndex("caminhoImagem")))
+                local.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
+                local.telefone = (cursor.getString(cursor.getColumnIndex("telefone")))
+                local.latitude = (cursor.getString(cursor.getColumnIndex("latitude")))
+                local.longitude = (cursor.getString(cursor.getColumnIndex("longitude")))
+                locais.add(local)
             }
         }
         cursor.close()

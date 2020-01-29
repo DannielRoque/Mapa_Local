@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -30,6 +29,7 @@ import estudo.com.mapalocal.constantes.PATH_FORMULARIO
 import estudo.com.mapalocal.constantes.TITLE_HOME
 import estudo.com.mapalocal.dao.LocalDAO
 import estudo.com.mapalocal.modelo.Categoria
+import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,16 +38,17 @@ import java.lang.Double.parseDouble
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var latlong: LatLng
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
-    lateinit var latlong : LatLng
     private var isLight = true
-    private var isSatelite = true
     private var isTerrain = true
-    private var client: FusedLocationProviderClient? = null
-    private lateinit var adapter: ActivityHomeAdapter
+    private var isSatelite = true
     private val dao = LocalDAO(this)
+    private lateinit var adapter: ActivityHomeAdapter
+    private var client: FusedLocationProviderClient? = null
     private var listaCategorias: MutableList<Categoria> = arrayListOf()
+    private var listaLocais : MutableList<Local> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
         mMap.uiSettings.isMyLocationButtonEnabled = true
         mMap.setOnMapLongClickListener(this)
+        configuraListaLocaisComTodosRetornadosBD()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -214,6 +216,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }?.addOnFailureListener { }
     }
 
+    private fun configuraListaLocaisComTodosRetornadosBD(){
+        mMap.clear()
+        listaLocais = dao.selectAllLocal()
+        Log.e("teste", "listaAllLocal $listaLocais")
+        if (!listaLocais.equals("")){
+            for(local in listaLocais){
+                latitude = parseDouble(local.latitude)
+                longitude = parseDouble(local.longitude)
+                latlong = LatLng(latitude, longitude)
+                mMap.addMarker(MarkerOptions().position(latlong).title(local.descricao))
+            }
+        }
+    }
+
     private fun configuraListaCategoriasHome() {
         listaCategorias = dao.selectAllCategorias()
         adapter = ActivityHomeAdapter(listaCategorias)
@@ -234,7 +250,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                         latitude = parseDouble(m.latitude)
                         longitude = parseDouble(m.longitude)
                         latlong = LatLng(latitude, longitude)
-                        mMap.addMarker(MarkerOptions().position(latlong))
+                        mMap.addMarker(MarkerOptions().position(latlong).title(m.descricao))
                     }
                 }
             }
