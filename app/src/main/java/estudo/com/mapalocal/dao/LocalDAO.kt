@@ -19,7 +19,7 @@ class LocalDAO(
         val sqlCategoria =
             "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
         val sqlLocalCategoria =
-            "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_descricao TEXT NOT NULL, categoria_descricao TEXT NOT NULL, PRIMARY KEY(local_id, categoria_id), FOREIGN KEY (local_id) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id))"
+            "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_descricao TEXT NOT NULL, categoria_descricao TEXT NOT NULL, PRIMARY KEY(local_descricao, categoria_descricao), FOREIGN KEY (local_descricao) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_descricao) REFERENCES CATEGORIA(categoria_id))"
 
         val sqlInsertCategoria =
             "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165360,'Rodoviária'),(2131165341,'Cafeteria Ramelo'),(2131165321,'Quitanda Joaquim'),(2131165332,'Leitões Jubeba'),(2131165281,'Olympus Academia')"
