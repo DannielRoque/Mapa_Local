@@ -138,7 +138,6 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="16sp"
                 android:layout_marginEnd="16sp"
-                android:background="@color/corFundo"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="4"
                 app:layout_constraintTop_toBottomOf="@id/button_new_categoria"

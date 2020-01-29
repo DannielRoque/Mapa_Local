@@ -88,7 +88,6 @@
             android:layout_marginStart="16sp"
             android:layout_marginBottom="16sp"
             android:orientation="vertical"
-            android:background="@color/corFundo"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_categoria_descricao"
