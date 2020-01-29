@@ -45,15 +45,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         configuraToolbar()
-        configuraListaCategoriasHome()
-
     }
 
-    private fun configuraListaCategoriasHome() {
-        listaCategorias = dao.selectAllCategorias()
-        adapter = ActivityHomeAdapter(listaCategorias)
-        activity_main_recycler_view.adapter = adapter
-    }
+
 
     private fun configuraToolbar() {
         setSupportActionBar(activity_main_toolbar)
@@ -170,6 +164,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     override fun onResume() {
+        configuraListaCategoriasHome()
         super.onResume()
 
         if (ContextCompat.checkSelfPermission(
@@ -210,5 +205,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origem, 15f))
             }
         }?.addOnFailureListener { }
+    }
+    private fun configuraListaCategoriasHome() {
+        listaCategorias = dao.selectAllCategorias()
+        adapter = ActivityHomeAdapter(listaCategorias)
+        activity_main_recycler_view.adapter = adapter
     }
 }
