@@ -14,11 +14,9 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -76,6 +74,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         mMap.uiSettings.isMyLocationButtonEnabled = true
         mMap.setOnMapLongClickListener(this)
         configuraListaLocaisComTodosRetornadosBD()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -218,6 +217,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     private fun configuraListaLocaisComTodosRetornadosBD(){
         mMap.clear()
+        val listaMarkers : MutableList<LatLng> = arrayListOf()
         listaLocais = dao.selectAllLocal()
         Log.e("teste", "listaAllLocal $listaLocais")
         if (!listaLocais.equals("")){
@@ -226,7 +226,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 longitude = parseDouble(local.longitude)
                 latlong = LatLng(latitude, longitude)
                 mMap.addMarker(MarkerOptions().position(latlong).title(local.descricao))
+                listaMarkers.add(latlong)
             }
+        }
+        //bounds não funfa
+        chamaBounds(listaMarkers)
+    }
+
+    //bounds não funfa
+    private fun chamaBounds(lista : MutableList<LatLng>){
+        if (lista.isNotEmpty()){
+        val padding : Int = 0
+        val builder = LatLngBounds.Builder()
+        for (marker in lista){
+            builder.include(marker)
+        }
+        val bounds : LatLngBounds = builder.build()
+        val cu : CameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+        mMap.moveCamera(cu)
         }
     }
 
