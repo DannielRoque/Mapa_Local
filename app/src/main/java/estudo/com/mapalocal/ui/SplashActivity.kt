@@ -22,8 +22,8 @@ class SplashActivity : AppCompatActivity() {
         logo.animation = fromLogo
 
         Handler().postDelayed(Runnable {
-//            startActivity(Intent(baseContext, MainActivity::class.java))
+            startActivity(Intent(baseContext, MainActivity::class.java))
             finish()
-        }, 9000)
+        }, 5000)
     }
 }

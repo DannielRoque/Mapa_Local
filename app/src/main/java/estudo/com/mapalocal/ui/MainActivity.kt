@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -19,7 +20,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.CODE_ERRO
 import estudo.com.mapalocal.constantes.HINT_SEARCH
@@ -28,6 +31,7 @@ import estudo.com.mapalocal.constantes.TITLE_HOME
 import estudo.com.mapalocal.dao.LocalDAO
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
+import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -46,8 +50,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         setContentView(R.layout.activity_main)
         configuraToolbar()
     }
-
-
 
     private fun configuraToolbar() {
         setSupportActionBar(activity_main_toolbar)
@@ -165,6 +167,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     override fun onResume() {
         configuraListaCategoriasHome()
+        configuraCliqueListaCategoria()
         super.onResume()
 
         if (ContextCompat.checkSelfPermission(
@@ -210,5 +213,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         listaCategorias = dao.selectAllCategorias()
         adapter = ActivityHomeAdapter(listaCategorias)
         activity_main_recycler_view.adapter = adapter
+    }
+
+    private fun configuraCliqueListaCategoria() {
+        adapter.setOnItemClickListener(object : OnItemCLickListener {
+            override fun onItemClick(view: String, position: Int) {
+                val categoria : Categoria = Gson().fromJson(view, object : TypeToken<Categoria>() {}.type )
+                val dados =
+                    dao.buscaTodosLocaisClicandoCategoria(categoria.descricao)
+                Log.e("teste", "click: ${dados.toString()}")
+                if (dados!=null) {
+                    mMap.clear()
+                    for (m in dados) {
+                        Toast.makeText(this@MainActivity, "local ${m.descricao},${m.latLng},${m.id}", Toast.LENGTH_LONG).show()
+                    }
+                }else{
+                    Log.e("teste", "fora $dados")
+                }
+            }
+        })
     }
 }

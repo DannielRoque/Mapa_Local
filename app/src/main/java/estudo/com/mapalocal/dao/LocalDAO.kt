@@ -5,8 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.icu.lang.UProperty.LOWERCASE
-import android.icu.text.CaseMap
 import android.util.Log
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
@@ -24,7 +22,7 @@ class LocalDAO(
             "CREATE TABLE IF NOT EXISTS LOCAL_HAS_CATEGORIA(local_descricao TEXT NOT NULL, categoria_descricao TEXT NOT NULL, PRIMARY KEY(local_descricao, categoria_descricao), FOREIGN KEY (local_descricao) REFERENCES LOCAL(local_id), FOREIGN KEY (categoria_descricao) REFERENCES CATEGORIA(categoria_id))"
 
         val sqlInsertCategoria =
-            "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165360,'rodoviária'),(2131165341,'cafeteria'),(2131165321,'quitanda'),(2131165332,'leitões'),(2131165281,'academia')"
+            "INSERT INTO CATEGORIA(caminhoIcone, descricao) VALUES(2131165360,'taxi'),(2131165341,'barbearia'),(2131165321,'mecanico'),(2131165332,'aquario'),(2131165281,'choperia')"
 
         db.execSQL(sqlLocal)
         db.execSQL(sqlCategoria)
@@ -147,7 +145,7 @@ class LocalDAO(
     //configuracao banco local_has_categoria abaixo
 
     fun insertLocal_has_Categoria(local_descricao: String, categoria_descricao: String) {
-        val db : SQLiteDatabase = writableDatabase
+        val db: SQLiteDatabase = writableDatabase
         val dado = ContentValues()
         dado.put("local_descricao", local_descricao)
         dado.put("categoria_descricao", categoria_descricao)
@@ -157,5 +155,29 @@ class LocalDAO(
 
     fun deleteLocal_has_Categoria(local_id: Int, categoria_id: Int) {
 
+    }
+
+    fun buscaTodosLocaisClicandoCategoria(descricaoSelecionada: String): MutableList<Local>? {
+        Log.e("teste", "descricao entrada $descricaoSelecionada")
+        if (descricaoSelecionada.equals(null)) return null
+        val db: SQLiteDatabase = readableDatabase
+        val sql ="SELECT l.* FROM LOCAL_HAS_CATEGORIA as lc INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao WHERE c.descricao = '$descricaoSelecionada'"
+        Log.e("teste", "abaixo select $sql")
+        val cursor: Cursor = db.rawQuery(sql, null)
+        val locaisSelecionados: MutableList<Local> = arrayListOf()
+        if (!cursor.equals(null)) {
+            while (cursor.moveToNext()) {
+                val local = Local()
+                local.id = (cursor.getInt(cursor.getColumnIndex("id")))
+                local.caminhoImagem = (cursor.getString(cursor.getColumnIndex("caminhoImagem")))
+                local.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
+                local.telefone = (cursor.getString(cursor.getColumnIndex("telefone")))
+                local.latLng = (cursor.getString(cursor.getColumnIndex("latlng")))
+                locaisSelecionados.add(local)
+            }
+        }
+        cursor.close()
+                Log.e("teste", "locais selecionados $locaisSelecionados")
+        return locaisSelecionados
     }
 }
