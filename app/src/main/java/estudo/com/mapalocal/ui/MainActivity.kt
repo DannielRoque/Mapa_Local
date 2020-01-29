@@ -235,11 +235,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                         longitude = parseDouble(m.longitude)
                         latlong = LatLng(latitude, longitude)
                         mMap.addMarker(MarkerOptions().position(latlong))
-                        Toast.makeText(
-                            this@MainActivity,
-                            "local ${m.descricao},${m.latitude} ${m.longitude}",
-                            Toast.LENGTH_LONG
-                        ).show()
                     }
                 }
             }

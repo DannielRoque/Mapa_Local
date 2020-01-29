@@ -5,4 +5,5 @@
     <string name="descricao">Descricao</string>
     <string name="telefone">Telefone</string>
     <string name="selecionar_categoria">Selecionar Categoria</string>
+    <string name="places">Places</string>
 </resources>

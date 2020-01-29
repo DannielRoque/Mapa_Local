@@ -15,7 +15,7 @@
             android:id="@+id/my_card"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@color/corToolbar"
+            android:backgroundTint="@color/corFundo"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             app:cardCornerRadius="50dp">
@@ -24,6 +24,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="fitXY"
+                android:background="@color/corFundo"
                 android:layout_gravity="center"
                 android:src="@drawable/image" />
         </androidx.cardview.widget.CardView>
