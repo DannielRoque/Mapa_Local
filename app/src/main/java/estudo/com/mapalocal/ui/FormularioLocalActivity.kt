@@ -20,7 +20,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -105,7 +104,6 @@ class FormularioLocalActivity : AppCompatActivity() {
             }
         })
     }
-
 
     private fun configuracaoGaleriaCamera() {
         activity_formulario_botao_imagem_local.setOnClickListener {

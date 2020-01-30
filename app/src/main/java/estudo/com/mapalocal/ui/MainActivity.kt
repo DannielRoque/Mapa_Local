@@ -1,29 +1,24 @@
 package estudo.com.mapalocal.ui
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
-import android.view.*
-import android.widget.ImageView
-import androidx.annotation.DrawableRes
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.dynamic.IObjectWrapper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import estudo.com.mapalocal.R
@@ -36,20 +31,20 @@ import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
+import estudo.com.mapalocal.ui.helper.ActivityHelper
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.marker_customizado.*
-import kotlinx.android.synthetic.main.marker_customizado.view.*
 import java.lang.Double.parseDouble
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var help: ActivityHelper
     private lateinit var latlong: LatLng
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
     private var isLight = true
     private var isTerrain = true
     private var isSatelite = true
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
     private val dao = LocalDAO(this)
     private lateinit var adapter: ActivityHomeAdapter
     private var client: FusedLocationProviderClient? = null
@@ -60,6 +55,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         configuraToolbar()
+        help = ActivityHelper(this)
     }
 
     private fun configuraToolbar() {
@@ -82,7 +78,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         mMap.uiSettings.isMyLocationButtonEnabled = true
         mMap.setOnMapLongClickListener(this)
         configuraListaLocaisComTodosRetornadosBD()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -101,9 +96,31 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 return false
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {/*realiza a busca interna*/return false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                Log.e("teste", "search $newText")
+                if (!newText.equals("")){
+                Log.e("teste", "new $newText")
+                configuraSearch(newText!!)
+                }
+                /*realiza a busca interna*/return false
             }
         })
+    }
+
+    private fun configuraSearch(description : String){
+        val listaPosicaoSearch : MutableList<LatLng> = arrayListOf()
+        Log.e("teste", "entrou search")
+        if (!description.equals(null)){
+        Log.e("teste", "entrou if")
+        val listaSearch = dao.selectLocal(description)
+            for (busca in listaSearch){
+                latitude = parseDouble(busca.latitude)
+                longitude = parseDouble(busca.longitude)
+                latlong = LatLng(latitude, longitude)
+                listaPosicaoSearch.add(latlong)
+            }
+            chamaBounds(listaPosicaoSearch) // criar personalizado
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -121,6 +138,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         return super.onOptionsItemSelected(item)
     }
 
+
     private fun configuraMapaTerreno() {
         if (isTerrain) {
             mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
@@ -130,6 +148,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         isTerrain = !isTerrain
         isSatelite = true
         isLight = true
+
     }
 
     private fun configuraMapaHibrido() {
@@ -143,6 +162,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         isTerrain = true
     }
 
+
     private fun configuraMapaSatelital() {
         if (isSatelite) {
             mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
@@ -152,6 +172,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         isSatelite = !isSatelite
         isLight = true
         isTerrain = true
+
     }
 
     override fun onMapLongClick(latLng: LatLng) {
@@ -222,12 +243,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origem, 15f))
             }
         }?.addOnFailureListener { }
+
     }
 
     private fun configuraListaLocaisComTodosRetornadosBD() {
         mMap.clear()
-        val listaMarkers: MutableList<LatLng> = arrayListOf()
-        var caminho : Int? = null
+        var caminho: Int? = null
         listaLocais = dao.selectAllLocal()
         Log.e("teste", "listaAllLocal $listaLocais")
 
@@ -237,28 +258,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 longitude = parseDouble(local.longitude)
                 latlong = LatLng(latitude, longitude)
                 listaCategorias = dao.buscaTodasCategoriasOndeLocal(local.descricao)!!
-                for (cat in listaCategorias){
-                    caminho=cat.caminhoIcone!!
+                for (cat in listaCategorias) {
+                    caminho = cat.caminhoIcone!!
                 }
-                mMap.addMarker(MarkerOptions().position(latlong).title(local.descricao).icon(BitmapDescriptorFactory.fromBitmap(bitmapDescriptor(this, caminho!!))))
-                listaMarkers.add(latlong)
+                mMap.addMarker(
+                    MarkerOptions().position(latlong).title(local.descricao).icon(
+                        BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho!!))
+                    )
+                )
             }
-        }
-        //bounds não funfa
-        chamaBounds(listaMarkers)
-    }
-
-    //bounds não funfa
-    private fun chamaBounds(lista: MutableList<LatLng>) {
-        if (lista.isNotEmpty()) {
-            val padding: Int = 0
-            val builder = LatLngBounds.Builder()
-            for (marker in lista) {
-                builder.include(marker)
-            }
-            val bounds: LatLngBounds = builder.build()
-            val cu: CameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
-            mMap.moveCamera(cu)
         }
     }
 
@@ -277,6 +285,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
                 if (dados != null) {
                     mMap.clear()
+                    val listaMarkers: MutableList<LatLng> = arrayListOf()
                     for (m in dados) {
                         latitude = parseDouble(m.latitude)
                         longitude = parseDouble(m.longitude)
@@ -284,40 +293,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                         mMap.addMarker(
                             MarkerOptions().position(latlong).title(m.descricao).icon(
                                 BitmapDescriptorFactory.fromBitmap(
-                                    bitmapDescriptor(
+                                    help.bitmapDescriptor(
                                         this@MainActivity,
                                         categoria.caminhoIcone!!
                                     )
                                 )
                             )
                         )
+                        listaMarkers.add(latlong)
+                        chamaBounds(listaMarkers)
                     }
                 }
             }
         })
     }
 
-    private fun bitmapDescriptor(context: Context, @DrawableRes resId: Int): Bitmap {
-
-        val marker: View = LayoutInflater.from(context).inflate(R.layout.marker_customizado, null)
-
-        var campo_icone_marker: ImageView = marker.my_card_image_marker
-        campo_icone_marker.setImageResource(resId)
-
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        marker.layoutParams = ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT)
-        marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
-
-        val bitmap: Bitmap = Bitmap.createBitmap(
-            marker.measuredWidth,
-            marker.measuredHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        marker.draw(canvas)
-        return bitmap
+    private fun chamaBounds(lista: MutableList<LatLng>) {
+        if (lista.isNotEmpty()) {
+            val padding = 150
+            val builder = LatLngBounds.Builder()
+            for (marker in lista) {
+                builder.include(marker)
+            }
+            val bounds: LatLngBounds = builder.build()
+            val cu: CameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+            mMap.animateCamera(cu)
+            mMap.minZoomLevel
+        }
     }
 
 }

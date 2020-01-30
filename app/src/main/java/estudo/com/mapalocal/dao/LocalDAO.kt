@@ -129,6 +129,23 @@ class LocalDAO(
         db.delete("LOCAL", "id =?", params)
     }
 
+    fun selectLocal (descricao : String): MutableList<Local>{
+        val db : SQLiteDatabase = readableDatabase
+        val sql = "SELECT * FROM LOCAL WHERE descricao = '$descricao'"
+        val cursor : Cursor = db.rawQuery(sql, null)
+        val localSearch : MutableList<Local> = arrayListOf()
+        if (!cursor.equals(null)){
+            while (cursor.moveToNext()){
+                val local = Local()
+                configuraLocal(local, cursor)
+                localSearch.add(local)
+            }
+        }
+        cursor.close()
+        Log.e("teste", "$localSearch")
+        return localSearch
+    }
+
     fun selectAllLocal(): MutableList<Local> {
         val db: SQLiteDatabase = writableDatabase
         val sql = "SELECT * FROM LOCAL"
