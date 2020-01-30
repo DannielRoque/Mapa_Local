@@ -137,17 +137,24 @@ class LocalDAO(
         if (!cursor.equals(null)) {
             while (cursor.moveToNext()) {
                 val local = Local()
-                local.id = (cursor.getInt(cursor.getColumnIndex("id")))
-                local.caminhoImagem = (cursor.getString(cursor.getColumnIndex("caminhoImagem")))
-                local.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
-                local.telefone = (cursor.getString(cursor.getColumnIndex("telefone")))
-                local.latitude = (cursor.getString(cursor.getColumnIndex("latitude")))
-                local.longitude = (cursor.getString(cursor.getColumnIndex("longitude")))
+                configuraLocal(local, cursor)
                 locais.add(local)
             }
         }
         cursor.close()
         return locais
+    }
+
+    private fun configuraLocal(
+        local: Local,
+        cursor: Cursor
+    ) {
+        local.id = (cursor.getInt(cursor.getColumnIndex("id")))
+        local.caminhoImagem = (cursor.getString(cursor.getColumnIndex("caminhoImagem")))
+        local.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
+        local.telefone = (cursor.getString(cursor.getColumnIndex("telefone")))
+        local.latitude = (cursor.getString(cursor.getColumnIndex("latitude")))
+        local.longitude = (cursor.getString(cursor.getColumnIndex("longitude")))
     }
 
     //configuracao banco local_has_categoria abaixo
@@ -176,16 +183,31 @@ class LocalDAO(
         if (!cursor.equals(null)) {
             while (cursor.moveToNext()) {
                 val local = Local()
-                local.id = (cursor.getInt(cursor.getColumnIndex("id")))
-                local.caminhoImagem = (cursor.getString(cursor.getColumnIndex("caminhoImagem")))
-                local.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
-                local.telefone = (cursor.getString(cursor.getColumnIndex("telefone")))
-                local.latitude = (cursor.getString(cursor.getColumnIndex("latitude")))
-                local.longitude = (cursor.getString(cursor.getColumnIndex("longitude")))
+                configuraLocal(local, cursor)
                 locaisSelecionados.add(local)
             }
         }
         cursor.close()
         return locaisSelecionados
+    }
+
+    fun buscaTodasCategoriasOndeLocal(descricaoLocal: String): MutableList<Categoria>? {
+        if (descricaoLocal.equals(null)) return null
+        val db: SQLiteDatabase = readableDatabase
+        val sql =
+            "SELECT c.* FROM LOCAL_HAS_CATEGORIA as lc INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao WHERE l.descricao = '$descricaoLocal'"
+        val cursor: Cursor = db.rawQuery(sql, null)
+        val categoriasSelecionadas: MutableList<Categoria> = arrayListOf()
+        if(!cursor.equals(null)){
+            while (cursor.moveToNext()){
+                val categoria = Categoria()
+                categoria.id = (cursor.getInt(cursor.getColumnIndex("id")))
+                categoria.caminhoIcone = (cursor.getInt(cursor.getColumnIndex("caminhoIcone")))
+                categoria.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
+                categoriasSelecionadas.add(categoria)
+            }
+        }
+        cursor.close()
+        return categoriasSelecionadas
     }
 }

@@ -9,8 +9,8 @@
 
         <ImageView
             android:id="@+id/img_pin"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
             android:src="@drawable/pin"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -21,12 +21,13 @@
 
         <ImageView
             android:id="@+id/my_card_image_marker"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="23dp"
             android:scaleType="fitXY"
             android:layout_gravity="center"
             android:src="@drawable/image"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/corPreta"
             app:layout_constraintTop_toTopOf="@id/img_pin"
             app:layout_constraintStart_toStartOf="@id/img_pin"
             app:layout_constraintEnd_toEndOf="@id/img_pin"/>

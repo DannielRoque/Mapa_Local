@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private lateinit var adapter: ActivityHomeAdapter
     private var client: FusedLocationProviderClient? = null
     private var listaCategorias: MutableList<Categoria> = arrayListOf()
-    private var listaLocais : MutableList<Local> = arrayListOf()
+    private var listaLocais: MutableList<Local> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -179,6 +179,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     override fun onResume() {
+        listaCategorias = dao.selectAllCategorias()
         configuraListaCategoriasHome()
         configuraCliqueListaCategoria()
         super.onResume()
@@ -223,17 +224,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }?.addOnFailureListener { }
     }
 
-    private fun configuraListaLocaisComTodosRetornadosBD(){
+    private fun configuraListaLocaisComTodosRetornadosBD() {
         mMap.clear()
-        val listaMarkers : MutableList<LatLng> = arrayListOf()
+        val listaMarkers: MutableList<LatLng> = arrayListOf()
+        var caminho : Int? = null
         listaLocais = dao.selectAllLocal()
         Log.e("teste", "listaAllLocal $listaLocais")
-        if (!listaLocais.equals("")){
-            for(local in listaLocais){
+
+        if (!listaLocais.equals("")) {
+            for (local in listaLocais) {
                 latitude = parseDouble(local.latitude)
                 longitude = parseDouble(local.longitude)
                 latlong = LatLng(latitude, longitude)
-                mMap.addMarker(MarkerOptions().position(latlong).title(local.descricao))
+                listaCategorias = dao.buscaTodasCategoriasOndeLocal(local.descricao)!!
+                for (cat in listaCategorias){
+                    caminho=cat.caminhoIcone!!
+                }
+                mMap.addMarker(MarkerOptions().position(latlong).title(local.descricao).icon(BitmapDescriptorFactory.fromBitmap(bitmapDescriptor(this, caminho!!))))
                 listaMarkers.add(latlong)
             }
         }
@@ -242,21 +249,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     //bounds não funfa
-    private fun chamaBounds(lista : MutableList<LatLng>){
-        if (lista.isNotEmpty()){
-        val padding : Int = 0
-        val builder = LatLngBounds.Builder()
-        for (marker in lista){
-            builder.include(marker)
-        }
-        val bounds : LatLngBounds = builder.build()
-        val cu : CameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
-        mMap.moveCamera(cu)
+    private fun chamaBounds(lista: MutableList<LatLng>) {
+        if (lista.isNotEmpty()) {
+            val padding: Int = 0
+            val builder = LatLngBounds.Builder()
+            for (marker in lista) {
+                builder.include(marker)
+            }
+            val bounds: LatLngBounds = builder.build()
+            val cu: CameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+            mMap.moveCamera(cu)
         }
     }
 
     private fun configuraListaCategoriasHome() {
-        listaCategorias = dao.selectAllCategorias()
         adapter = ActivityHomeAdapter(listaCategorias)
         activity_main_recycler_view.adapter = adapter
     }
@@ -275,18 +281,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                         latitude = parseDouble(m.latitude)
                         longitude = parseDouble(m.longitude)
                         latlong = LatLng(latitude, longitude)
-                        mMap.addMarker(MarkerOptions().position(latlong).title(m.descricao).icon(BitmapDescriptorFactory.fromBitmap(bitmapDescriptor(this@MainActivity, categoria.caminhoIcone!!))))
+                        mMap.addMarker(
+                            MarkerOptions().position(latlong).title(m.descricao).icon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                    bitmapDescriptor(
+                                        this@MainActivity,
+                                        categoria.caminhoIcone!!
+                                    )
+                                )
+                            )
+                        )
                     }
                 }
             }
         })
     }
 
-    private fun bitmapDescriptor(context: Context, @DrawableRes resId : Int) : Bitmap{
+    private fun bitmapDescriptor(context: Context, @DrawableRes resId: Int): Bitmap {
 
-        val marker : View = LayoutInflater.from(context).inflate(R.layout.marker_customizado, null)
+        val marker: View = LayoutInflater.from(context).inflate(R.layout.marker_customizado, null)
 
-        var campo_icone_marker : ImageView = marker.my_card_image_marker
+        var campo_icone_marker: ImageView = marker.my_card_image_marker
         campo_icone_marker.setImageResource(resId)
 
         val displayMetrics = DisplayMetrics()
@@ -295,7 +310,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
         marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
 
-        val bitmap : Bitmap = Bitmap.createBitmap(marker.measuredWidth, marker.measuredHeight, Bitmap.Config.ARGB_8888)
+        val bitmap: Bitmap = Bitmap.createBitmap(
+            marker.measuredWidth,
+            marker.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
         val canvas = Canvas(bitmap)
         marker.draw(canvas)
         return bitmap
