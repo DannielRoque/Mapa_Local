@@ -1,6 +1,6 @@
 package estudo.com.mapalocal.constantes
 
-const val TITLE_HOME = "Encontre-se"
+const val TITLE_HOME = "Places"
 const val TITLE_FORMULARIO_LOCAL ="Adicionar Local"
 const val TITLE_FORMULARIO_CATEGORIA = "Adicionar Categoria"
 const val TITLE_ALERT_CAMERA = "Adicionar Imagem"

@@ -107,22 +107,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         })
     }
 
-    private fun configuraSearch(description : String){
-        val listaPosicaoSearch : MutableList<LatLng> = arrayListOf()
-        Log.e("teste", "entrou search")
-        if (!description.equals(null)){
-        Log.e("teste", "entrou if")
-        val listaSearch = dao.selectLocal(description)
-            for (busca in listaSearch){
-                latitude = parseDouble(busca.latitude)
-                longitude = parseDouble(busca.longitude)
-                latlong = LatLng(latitude, longitude)
-                listaPosicaoSearch.add(latlong)
-            }
-            chamaBounds(listaPosicaoSearch) // criar personalizado
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mapa_satelite -> {
@@ -246,9 +230,30 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     }
 
+
+    private fun configuraSearch(description : String){
+        val listaPosicaoSearch : MutableList<LatLng> = arrayListOf()
+        val caminho : Int? = null
+        Log.e("teste", "entrou search")
+        if (!description.equals(null)){
+            Log.e("teste", "entrou if")
+            val listaSearch = dao.selectLocal(description)
+            for (busca in listaSearch){
+                latitude = parseDouble(busca.latitude)
+                longitude = parseDouble(busca.longitude)
+                latlong = LatLng(latitude, longitude)
+                listaPosicaoSearch.add(latlong)
+            listaCategorias = dao.buscaTodasCategoriasOndeLocal(busca.descricao)!!
+
+                configuraMarkerPersonalizado(caminho, busca)
+            }
+            chamaBounds(listaPosicaoSearch) // criar personalizado
+        }
+    }
+
     private fun configuraListaLocaisComTodosRetornadosBD() {
         mMap.clear()
-        var caminho: Int? = null
+        val caminho: Int? = null
         listaLocais = dao.selectAllLocal()
         Log.e("teste", "listaAllLocal $listaLocais")
 
@@ -258,16 +263,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 longitude = parseDouble(local.longitude)
                 latlong = LatLng(latitude, longitude)
                 listaCategorias = dao.buscaTodasCategoriasOndeLocal(local.descricao)!!
-                for (cat in listaCategorias) {
-                    caminho = cat.caminhoIcone!!
-                }
-                mMap.addMarker(
-                    MarkerOptions().position(latlong).title(local.descricao).icon(
-                        BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho!!))
-                    )
-                )
+                configuraMarkerPersonalizado(caminho, local)
             }
         }
+    }
+
+    private fun configuraMarkerPersonalizado(
+        caminho: Int?,
+        local: Local
+    ) {
+        var caminho1 = caminho
+        for (cat in listaCategorias) {
+            caminho1 = cat.caminhoIcone!!
+        }
+        mMap.addMarker(
+            MarkerOptions().position(latlong).title(local.descricao).icon(
+                BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho1!!))
+            )
+        )
     }
 
     private fun configuraListaCategoriasHome() {

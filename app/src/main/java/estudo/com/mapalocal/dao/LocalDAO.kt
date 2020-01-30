@@ -98,11 +98,13 @@ class LocalDAO(
 
     //configuracao banco Local abaixo
 
-    fun insertLocal(local: Local) {
+    fun insertLocal(local: Local) : Long{
+        val idDoItemIncluido : Long
         val db: SQLiteDatabase = writableDatabase
         val dados: ContentValues = pegaLocal(local)
-        db.insert("LOCAL", null, dados)
+        idDoItemIncluido = db.insert("LOCAL", null, dados)
         Log.e("teste", "dados local $dados")
+        return idDoItemIncluido
     }
 
     private fun pegaLocal(local: Local): ContentValues {
@@ -131,7 +133,7 @@ class LocalDAO(
 
     fun selectLocal (descricao : String): MutableList<Local>{
         val db : SQLiteDatabase = readableDatabase
-        val sql = "SELECT * FROM LOCAL WHERE descricao = '$descricao'"
+        val sql = "SELECT * FROM LOCAL WHERE descricao LIKE '%$descricao%'"
         val cursor : Cursor = db.rawQuery(sql, null)
         val localSearch : MutableList<Local> = arrayListOf()
         if (!cursor.equals(null)){
