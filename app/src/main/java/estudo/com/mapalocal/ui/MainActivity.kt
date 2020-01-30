@@ -1,23 +1,29 @@
 package estudo.com.mapalocal.ui
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
+import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.dynamic.IObjectWrapper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import estudo.com.mapalocal.R
@@ -31,6 +37,8 @@ import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.marker_customizado.*
+import kotlinx.android.synthetic.main.marker_customizado.view.*
 import java.lang.Double.parseDouble
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -267,10 +275,30 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                         latitude = parseDouble(m.latitude)
                         longitude = parseDouble(m.longitude)
                         latlong = LatLng(latitude, longitude)
-                        mMap.addMarker(MarkerOptions().position(latlong).title(m.descricao))
+                        mMap.addMarker(MarkerOptions().position(latlong).title(m.descricao).icon(BitmapDescriptorFactory.fromBitmap(bitmapDescriptor(this@MainActivity, categoria.caminhoIcone!!))))
                     }
                 }
             }
         })
     }
+
+    private fun bitmapDescriptor(context: Context, @DrawableRes resId : Int) : Bitmap{
+
+        val marker : View = LayoutInflater.from(context).inflate(R.layout.marker_customizado, null)
+
+        var campo_icone_marker : ImageView = marker.my_card_image_marker
+        campo_icone_marker.setImageResource(resId)
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        marker.layoutParams = ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT)
+        marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
+
+        val bitmap : Bitmap = Bitmap.createBitmap(marker.measuredWidth, marker.measuredHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        marker.draw(canvas)
+        return bitmap
+    }
+
 }
