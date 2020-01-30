@@ -2,6 +2,7 @@ package estudo.com.mapalocal.ui
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,6 +14,7 @@ import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
@@ -35,6 +37,7 @@ import estudo.com.mapalocal.ui.adapter.ActivityLocalAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
+import kotlinx.android.synthetic.main.alert_dialog_custom.*
 import java.io.File
 
 class FormularioLocalActivity : AppCompatActivity() {
@@ -143,25 +146,24 @@ class FormularioLocalActivity : AppCompatActivity() {
     }
 
     private fun dialogComGaleriaECamera() {
-        val options = arrayOf(GALERIA, CAMERA)
-        val builder = AlertDialog.Builder(this).setTitle(TITLE_ALERT_CAMERA)
-        configuraAlertDialog(builder, options)
-        builder.show()
-    }
+        val meuDialog = Dialog(this)
+        meuDialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        meuDialog.setContentView(layoutInflater.inflate(R.layout.alert_dialog_custom, null))
+        meuDialog.show()
 
-    private fun configuraAlertDialog(
-        builder: AlertDialog.Builder,
-        options: Array<String>
-    ) {
-        builder.setItems(options) { _, item ->
-            if (options[item].equals(GALERIA)) {
-                configuracaoGaleria()
-            } else if (options[item].equals(CAMERA)) {
-                configuracaoCamera()
-            }
+        val camera: ImageView = meuDialog.aler_dialog_camera
+        val galeria: ImageView = meuDialog.alert_dialog_galery
+
+        camera.setOnClickListener {
+            configuracaoCamera()
+            meuDialog.dismiss()
+        }
+
+        galeria.setOnClickListener {
+            configuracaoGaleria()
+            meuDialog.dismiss()
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

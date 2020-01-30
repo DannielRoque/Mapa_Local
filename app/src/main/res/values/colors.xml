@@ -8,5 +8,5 @@
     <color name="corPreta">#000</color>
     <color name="corVermelha">#E41515</color>
     <color name="corBotaoPersonalizado">#D86744</color>
-    <color name="corFundo">#EBCECECE</color>
+    <color name="corFundo">#f5f5f5</color>
 </resources>

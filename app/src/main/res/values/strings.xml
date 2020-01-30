@@ -6,4 +6,6 @@
     <string name="telefone">Telefone</string>
     <string name="selecionar_categoria">Selecionar Categoria</string>
     <string name="places">Places</string>
+    <string name="c_mera">Câmera</string>
+    <string name="galeria">Galeria</string>
 </resources>
