@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -97,12 +96,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                Log.e("teste", "search $newText")
-                if (!newText.equals("")){
-                Log.e("teste", "new $newText")
-                configuraSearch(newText!!)
+                if (!newText.equals("")) {
+                    configuraSearch(newText!!)
                 }
-                /*realiza a busca interna*/return false
+                return false
             }
         })
     }
@@ -122,7 +119,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         return super.onOptionsItemSelected(item)
     }
 
-
     private fun configuraMapaTerreno() {
         if (isTerrain) {
             mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
@@ -132,7 +128,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         isTerrain = !isTerrain
         isSatelite = true
         isLight = true
-
     }
 
     private fun configuraMapaHibrido() {
@@ -145,7 +140,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         isSatelite = true
         isTerrain = true
     }
-
 
     private fun configuraMapaSatelital() {
         if (isSatelite) {
@@ -164,7 +158,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val intentFormulario = Intent(this, FormularioLocalActivity::class.java)
         val objetoTransf = objectJson.toJson(latLng)
         intentFormulario.putExtra(PATH_FORMULARIO, objetoTransf)
-        Log.e("Teste", "LongCLick $latLng")
         startActivity(intentFormulario)
     }
 
@@ -175,7 +168,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     ) {
         when (requestCode) {
             CODE_ERRO -> {
-                Log.e("Teste", "requestCode $requestCode e $CODE_ERRO")
                 if ((grantResults.isEmpty()) or (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
                     finish()
                 }
@@ -212,12 +204,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)) {
             ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED,
             ConnectionResult.SERVICE_DISABLED -> {
-                Log.e("Teste", "Show dialog erro services")
                 GoogleApiAvailability.getInstance().getErrorDialog(this, errorCode, CODE_ERRO)
                 { finish() }.show()
             }
             ConnectionResult.SUCCESS -> {
-                Log.e("Teste", "services atualizado")
             }
         }
 
@@ -227,27 +217,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origem, 15f))
             }
         }?.addOnFailureListener { }
-
     }
 
-
-    private fun configuraSearch(description : String){
-        val listaPosicaoSearch : MutableList<LatLng> = arrayListOf()
-        val caminho : Int? = null
-        Log.e("teste", "entrou search")
-        if (!description.equals(null)){
-            Log.e("teste", "entrou if")
+    private fun configuraSearch(description: String) {
+        val listaPosicaoSearch: MutableList<LatLng> = arrayListOf()
+        val caminho: Int? = null
+        if (!description.equals(null)) {
             val listaSearch = dao.selectLocal(description)
-            for (busca in listaSearch){
+            for (busca in listaSearch) {
                 latitude = parseDouble(busca.latitude)
                 longitude = parseDouble(busca.longitude)
                 latlong = LatLng(latitude, longitude)
                 listaPosicaoSearch.add(latlong)
-            listaCategorias = dao.buscaTodasCategoriasOndeLocal(busca.descricao)!!
+                listaCategorias = dao.buscaTodasCategoriasOndeLocal(busca.descricao)!!
 
                 configuraMarkerPersonalizado(caminho, busca)
             }
-            chamaBounds(listaPosicaoSearch) // criar personalizado
+            chamaBounds(listaPosicaoSearch)
         }
     }
 
@@ -255,7 +241,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         mMap.clear()
         val caminho: Int? = null
         listaLocais = dao.selectAllLocal()
-        Log.e("teste", "listaAllLocal $listaLocais")
 
         if (!listaLocais.equals("")) {
             for (local in listaLocais) {
@@ -294,7 +279,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 val categoria: Categoria =
                     Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
                 val dados = dao.buscaTodosLocaisClicandoCategoria(categoria.descricao)
-                Log.e("teste", "click: ${dados.toString()}")
 
                 if (dados != null) {
                     mMap.clear()
@@ -334,5 +318,4 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             mMap.minZoomLevel
         }
     }
-
 }
