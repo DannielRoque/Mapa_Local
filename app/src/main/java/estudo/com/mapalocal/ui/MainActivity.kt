@@ -4,8 +4,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -14,10 +16,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import estudo.com.mapalocal.R
@@ -31,10 +30,12 @@ import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
 import estudo.com.mapalocal.ui.helper.ActivityHelper
+import estudo.com.mapalocal.ui.infowindow.InfoWindowPersonalizado
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Double.parseDouble
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
+    GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var help: ActivityHelper
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
         mMap.uiSettings.isMyLocationButtonEnabled = true
         mMap.setOnMapLongClickListener(this)
+        mMap.setOnInfoWindowClickListener(this)
         configuraListaLocaisComTodosRetornadosBD()
     }
 
@@ -261,11 +263,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         for (cat in listaCategorias) {
             caminho1 = cat.caminhoIcone!!
         }
-        mMap.addMarker(
-            MarkerOptions().position(latlong).title(local.descricao).icon(
-                BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho1!!))
-            )
+
+        val addMarker = mMap.addMarker(
+            MarkerOptions().position(latlong)
+                .title(local.descricao)
+                .snippet(local.telefone)
+                .icon(BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho1!!)))
         )
+        val infoWindow: GoogleMap.InfoWindowAdapter = InfoWindowPersonalizado(this, local)
+        mMap.setInfoWindowAdapter(infoWindow)
+        addMarker.tag
     }
 
     private fun configuraListaCategoriasHome() {
@@ -317,5 +324,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             mMap.animateCamera(cu)
             mMap.minZoomLevel
         }
+    }
+
+    override fun onInfoWindowClick(marker: Marker?) {
+
+
+        Toast.makeText(this, " > click", Toast.LENGTH_LONG).show()
+        Log.e("teste", "infoWindown click")
     }
 }

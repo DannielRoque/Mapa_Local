@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mapa Local</string>
+    <string name="app_name">Places</string>
     <string name="title_activity_maps">Map</string>
     <string name="imagem_categoria_do_local">Imagem Categoria do Local</string>
     <string name="descricao">Descricao</string>
