@@ -1,5 +1,6 @@
 package estudo.com.mapalocal.ui
 
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -7,6 +8,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.Window
+import android.widget.AdapterView
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -29,9 +34,11 @@ import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.adapter.ActivityHomeAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
+import estudo.com.mapalocal.ui.adapter.OnItemLongClickListener
 import estudo.com.mapalocal.ui.helper.ActivityHelper
 import estudo.com.mapalocal.ui.infowindow.InfoWindowPersonalizado
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.dialog_options.*
 import java.lang.Double.parseDouble
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
@@ -56,6 +63,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         setContentView(R.layout.activity_main)
         configuraToolbar()
         help = ActivityHelper(this)
+
     }
 
     private fun configuraToolbar() {
@@ -181,6 +189,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         listaCategorias = dao.selectAllCategorias()
         configuraListaCategoriasHome()
         configuraCliqueListaCategoria()
+        configuraLongCliqueLista()
         super.onResume()
 
         if (ContextCompat.checkSelfPermission(
@@ -312,6 +321,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         })
     }
 
+    private fun configuraLongCliqueLista(){
+        adapter.setOnLongClickListener( object : OnItemLongClickListener {
+            override fun onItemLongClick(view: String, position: Int): Boolean {
+                Toast.makeText(this@MainActivity, "teste", Toast.LENGTH_LONG).show()
+                return false
+            }
+        })
+    }
+
     private fun chamaBounds(lista: MutableList<LatLng>) {
         if (lista.isNotEmpty()) {
             val padding = 150
@@ -329,7 +347,30 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     override fun onInfoWindowClick(marker: Marker?) {
 
         marker?.hideInfoWindow()
-        Toast.makeText(this, " > click", Toast.LENGTH_LONG).show()
-        Log.e("teste", "infoWindown click")
+        val dialog = Dialog(this)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(layoutInflater.inflate(R.layout.dialog_options, null))
+        dialog.show()
+
+        val ligar : TextView = dialog.options_ligar
+        val site : TextView = dialog.options_site
+        val editar : TextView  = dialog.options_editar
+        val excluir : TextView  = dialog.options_excluir
+
+        ligar.setOnClickListener {
+            Log.e("teste", "pick-up")
+        }
+
+        site.setOnClickListener {
+            Log.e("teste", "website")
+        }
+
+        editar.setOnClickListener {
+            Log.e("teste", "edit")
+        }
+
+        excluir.setOnClickListener {
+            Log.e("teste", "delete")
+        }
     }
 }

@@ -10,4 +10,9 @@
     <string name="galeria">Galeria</string>
     <string name="adicionar_nova_categoria">Adicionar nova categoria</string>
     <string name="site">Site</string>
+    <string name="ligar">  Ligar</string>
+    <string name="mensagem">Mensagem</string>
+    <string name="visitar_site">Visitar site</string>
+    <string name="editar">Editar</string>
+    <string name="deletar">Deletar</string>
 </resources>

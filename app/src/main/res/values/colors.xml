@@ -9,4 +9,5 @@
     <color name="corVermelha">#E41515</color>
     <color name="corBotaoPersonalizado">#D86744</color>
     <color name="corFundo">#f5f5f5</color>
+    <color name="corAux">#C6979696</color>
 </resources>

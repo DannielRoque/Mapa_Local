@@ -26,7 +26,7 @@
         <ImageView
             android:id="@+id/activity_formulario_categoria_imagem"
             android:layout_width="0dp"
-            android:layout_height="350dp"
+            android:layout_height="300dp"
             android:contentDescription="@string/imagem_categoria_do_local"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"

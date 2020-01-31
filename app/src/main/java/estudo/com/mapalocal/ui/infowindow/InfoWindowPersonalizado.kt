@@ -25,11 +25,13 @@ class InfoWindowPersonalizado(val context: Context, val local : Local) : GoogleM
         val campo_titulo = view.info_titulo
         val campo_telefone = view.info_telefone
         val campo_imagem = view.info_imagem
+        val campo_site = view.info_site
 
 
 
         campo_titulo.text = marker?.title
         campo_telefone.text = marker?.snippet
+        campo_site.text = local.site
 
         val arquivoFoto = local.caminhoImagem
         if (arquivoFoto != null) {
