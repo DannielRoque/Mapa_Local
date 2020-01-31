@@ -15,7 +15,7 @@ class LocalDAO(
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
-            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoImagem TEXT, descricao TEXT NOT NULL UNIQUE, telefone TEXT, latitude TEXT, longitude TEXT)"
+            "CREATE TABLE IF NOT EXISTS LOCAL(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoImagem TEXT, descricao TEXT NOT NULL UNIQUE, telefone TEXT NOT NULL, site TEXT NOT NULL, latitude TEXT, longitude TEXT)"
         val sqlCategoria =
             "CREATE TABLE IF NOT EXISTS CATEGORIA(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, caminhoIcone TEXT, descricao TEXT NOT NULL UNIQUE)"
         val sqlLocalCategoria =
@@ -113,6 +113,7 @@ class LocalDAO(
         dados.put("caminhoImagem", local.caminhoImagem)
         dados.put("descricao", local.descricao)
         dados.put("telefone", local.telefone)
+        dados.put("site", local.site)
         dados.put("latitude", local.latitude)
         dados.put("longitude", local.longitude)
         return dados
@@ -172,6 +173,7 @@ class LocalDAO(
         local.caminhoImagem = (cursor.getString(cursor.getColumnIndex("caminhoImagem")))
         local.descricao = (cursor.getString(cursor.getColumnIndex("descricao")))
         local.telefone = (cursor.getString(cursor.getColumnIndex("telefone")))
+        local.site = (cursor.getString(cursor.getColumnIndex("site")))
         local.latitude = (cursor.getString(cursor.getColumnIndex("latitude")))
         local.longitude = (cursor.getString(cursor.getColumnIndex("longitude")))
     }

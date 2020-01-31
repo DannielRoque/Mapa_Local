@@ -7,6 +7,7 @@ class Local(
     var caminhoImagem: String? = "",
     var descricao: String = "",
     var telefone: String = "",
+    var site: String = "",
     var latitude: String = "",
     var longitude: String = ""
 ) : Serializable

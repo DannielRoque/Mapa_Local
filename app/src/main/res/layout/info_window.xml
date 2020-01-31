@@ -44,13 +44,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20sp"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textColor="@color/corPreta"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/info_imagem"
         app:layout_constraintTop_toBottomOf="@id/info_titulo"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="14998619461"/>
+
+        <TextView
+            android:id="@+id/info_site"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="@color/corPreta"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/info_imagem"
+            app:layout_constraintTop_toBottomOf="@id/info_telefone"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="7777777777777777777777777777777"/>
 
     <Button
         android:id="@+id/info_ver_mais"
@@ -63,7 +77,7 @@
         android:textColor="@color/corToolbar"
         android:textStyle="bold"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/info_telefone"
+        app:layout_constraintTop_toBottomOf="@id/info_site"
         app:layout_constraintStart_toEndOf="@id/info_imagem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/info_imagem"/>

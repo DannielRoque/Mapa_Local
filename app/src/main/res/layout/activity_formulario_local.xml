@@ -42,7 +42,7 @@
             <ImageView
                 android:id="@+id/activity_formulario_imagem_local"
                 android:layout_width="0dp"
-                android:layout_height="350dp"
+                android:layout_height="270dp"
                 android:contentDescription="@string/imagem_categoria_do_local"
                 android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -113,11 +113,31 @@
                     android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/activity_formulario_site"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8sp"
+                app:layout_constraintEnd_toEndOf="@id/activity_formulario_telefone"
+                app:layout_constraintStart_toStartOf="@id/activity_formulario_telefone"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_telefone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/site"
+                    android:inputType="text"
+                    android:maxLength="32"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:id="@+id/button_new_categoria"
                 android:layout_width="match_parent"
                 android:layout_height="30sp"
-                android:text="Adicionar nova categoria"
+                android:text="@string/adicionar_nova_categoria"
                 android:textAlignment="center"
                 android:gravity="center"
                 android:layout_marginEnd="16sp"
@@ -126,7 +146,7 @@
                 android:textStyle="bold"
                 android:background="@drawable/button_borda"
                 app:layout_constraintBottom_toTopOf="@id/formulario_local_recyclerview"
-                app:layout_constraintTop_toBottomOf="@id/activity_formulario_telefone"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_site"
                 app:layout_constraintStart_toStartOf="@id/formulario_local_recyclerview"
                 app:layout_constraintEnd_toEndOf="@id/formulario_local_recyclerview"/>
 

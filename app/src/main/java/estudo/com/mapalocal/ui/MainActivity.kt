@@ -328,7 +328,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     override fun onInfoWindowClick(marker: Marker?) {
 
-
+        marker?.hideInfoWindow()
         Toast.makeText(this, " > click", Toast.LENGTH_LONG).show()
         Log.e("teste", "infoWindown click")
     }
