@@ -37,4 +37,11 @@ class ActivityHelper(private val activity: MainActivity) {
         marker.draw(canvas)
         return bitmap
     }
+
+    fun String.startsWith(
+        prefix : String,
+        ignoreCase: Boolean = false
+    ): Boolean{
+        return true
+    }
 }

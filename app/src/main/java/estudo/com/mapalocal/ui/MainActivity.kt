@@ -1,20 +1,24 @@
 package estudo.com.mapalocal.ui
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
-import android.widget.AdapterView
-import android.widget.ImageView
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -25,10 +29,7 @@ import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import estudo.com.mapalocal.R
-import estudo.com.mapalocal.constantes.CODE_ERRO
-import estudo.com.mapalocal.constantes.HINT_SEARCH
-import estudo.com.mapalocal.constantes.PATH_FORMULARIO
-import estudo.com.mapalocal.constantes.TITLE_HOME
+import estudo.com.mapalocal.constantes.*
 import estudo.com.mapalocal.dao.LocalDAO
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
@@ -44,6 +45,7 @@ import java.lang.Double.parseDouble
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
     GoogleMap.OnInfoWindowClickListener {
 
+    private lateinit var webView: WebView
     private lateinit var mMap: GoogleMap
     private lateinit var help: ActivityHelper
     private lateinit var latlong: LatLng
@@ -63,6 +65,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         setContentView(R.layout.activity_main)
         configuraToolbar()
         help = ActivityHelper(this)
+
+        webView = webview_activity
+        webView.webViewClient = object : WebViewClient(){
+            override fun shouldOverrideUrlLoading(view: WebView, url : String): Boolean{
+                view.loadUrl(url)
+                return true
+            }
+        }
 
     }
 
@@ -282,6 +292,57 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val infoWindow: GoogleMap.InfoWindowAdapter = InfoWindowPersonalizado(this, local)
         mMap.setInfoWindowAdapter(infoWindow)
         addMarker.tag
+
+
+        mMap.setOnInfoWindowClickListener {
+
+
+            it?.hideInfoWindow()
+            val dialog = Dialog(this)
+            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(layoutInflater.inflate(R.layout.dialog_options, null))
+            dialog.show()
+
+            val ligar: TextView = dialog.options_ligar
+            val site: TextView = dialog.options_site
+            val editar: TextView = dialog.options_editar
+            val excluir: TextView = dialog.options_excluir
+
+            ligar.setOnClickListener {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.CALL_PHONE),
+                        PHONE
+                    )
+                } else {
+                    val intentLigar = Intent(Intent.ACTION_CALL)
+                    intentLigar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intentLigar.data = Uri.parse("tel:" + local.telefone)
+                    startActivity(intentLigar)
+                    dialog.dismiss()
+                }
+            }
+
+
+            site.setOnClickListener {
+            var versite : String =local.site
+            if (!versite.startsWith("https://")){
+                versite = "https://$versite"
+            }
+                dialog.dismiss()
+                webView.loadUrl(versite)
+                webView.visibility=View.VISIBLE
+            }
+            editar.setOnClickListener {
+                Log.e("teste", "edit")
+            }
+            excluir.setOnClickListener {
+                Log.e("teste", "delete")
+            }
+        }
     }
 
     private fun configuraListaCategoriasHome() {
@@ -321,8 +382,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         })
     }
 
-    private fun configuraLongCliqueLista(){
-        adapter.setOnLongClickListener( object : OnItemLongClickListener {
+    private fun configuraLongCliqueLista() {
+        adapter.setOnLongClickListener(object : OnItemLongClickListener {
             override fun onItemLongClick(view: String, position: Int): Boolean {
                 Toast.makeText(this@MainActivity, "teste", Toast.LENGTH_LONG).show()
                 return false
@@ -344,33 +405,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
     }
 
+
+
     override fun onInfoWindowClick(marker: Marker?) {
 
-        marker?.hideInfoWindow()
-        val dialog = Dialog(this)
-        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(layoutInflater.inflate(R.layout.dialog_options, null))
-        dialog.show()
-
-        val ligar : TextView = dialog.options_ligar
-        val site : TextView = dialog.options_site
-        val editar : TextView  = dialog.options_editar
-        val excluir : TextView  = dialog.options_excluir
-
-        ligar.setOnClickListener {
-            Log.e("teste", "pick-up")
-        }
-
-        site.setOnClickListener {
-            Log.e("teste", "website")
-        }
-
-        editar.setOnClickListener {
-            Log.e("teste", "edit")
-        }
-
-        excluir.setOnClickListener {
-            Log.e("teste", "delete")
-        }
     }
 }
