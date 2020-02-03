@@ -1,6 +1,7 @@
 package estudo.com.mapalocal.ui
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -67,8 +68,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         help = ActivityHelper(this)
 
         webView = webview_activity
-        webView.webViewClient = object : WebViewClient(){
-            override fun shouldOverrideUrlLoading(view: WebView, url : String): Boolean{
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 view.loadUrl(url)
                 return true
             }
@@ -328,13 +329,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
 
             site.setOnClickListener {
-            var versite : String =local.site
-            if (!versite.startsWith("https://")){
-                versite = "https://$versite"
-            }
+                var versite: String = local.site
+                if (!versite.startsWith("https://")) {
+                    versite = "https://$versite"
+                }
                 dialog.dismiss()
                 webView.loadUrl(versite)
-                webView.visibility=View.VISIBLE
+                webView.visibility = View.VISIBLE
             }
             editar.setOnClickListener {
                 Log.e("teste", "edit")
@@ -342,7 +343,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             excluir.setOnClickListener {
                 dao.deleteLocal(local)
                 dao.deleteLocal_has_Categoria(local_id = local.descricao)
-                Toast.makeText(this, "${local.descricao} removido com sucesso!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "${local.descricao} removido com sucesso!", Toast.LENGTH_LONG)
+                    .show()
                 dialog.dismiss()
                 configuraListaLocaisComTodosRetornadosBD()
                 Log.e("teste", "delete ${local.id}")
@@ -390,7 +392,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private fun configuraLongCliqueLista() {
         adapter.setOnLongClickListener(object : OnItemLongClickListener {
             override fun onItemLongClick(view: String, position: Int): Boolean {
-                Toast.makeText(this@MainActivity, "teste", Toast.LENGTH_LONG).show()
+                val dados : Categoria = Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
+                val builder = AlertDialog.Builder(this@MainActivity)
+                builder.setTitle("Excluir")
+                builder.setMessage("Deseja remover todos os locais pertencentes a esta categoria ?")
+                builder.setPositiveButton("EXCLUIR") { dialog, which ->
+                    val todosLocais : MutableList<Local> =
+                        dao.buscaTodosLocaisClicandoCategoria(dados.descricao)!!
+                    dao.deleteLocal_has_Categoria_Todos(todosLocais)
+                    dao.deleteLocalLista(todosLocais)
+                        Log.e("teste", "clicklong main $dados")
+                        configuraListaLocaisComTodosRetornadosBD()
+                        dialog.dismiss()
+                }
+                builder.setNegativeButton("CANCELAR") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                val dialogalert = builder.create()
+                dialogalert.show()
                 return false
             }
         })
@@ -409,7 +428,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             mMap.minZoomLevel
         }
     }
-
 
 
     override fun onInfoWindowClick(marker: Marker?) {
