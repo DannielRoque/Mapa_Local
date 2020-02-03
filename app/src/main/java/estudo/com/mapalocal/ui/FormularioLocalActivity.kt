@@ -2,6 +2,7 @@ package estudo.com.mapalocal.ui
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -40,6 +41,7 @@ import estudo.com.mapalocal.ui.adapter.OnItemLongClickListener
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 import kotlinx.android.synthetic.main.alert_dialog_custom.*
+import kotlinx.android.synthetic.main.dialog_edit_delete.*
 import java.io.File
 
 class FormularioLocalActivity : AppCompatActivity() {
@@ -89,27 +91,67 @@ class FormularioLocalActivity : AppCompatActivity() {
         configuraClickItemLista()
     }
 
-    fun configuraClickLongo(){
-        adapter.setOnItemLongClickListener(object : OnItemLongClickListener{
-            override fun onItemLongClick(view: String, position: Int) : Boolean{
+    fun configuraClickLongo() {
+        adapter.setOnItemLongClickListener(object : OnItemLongClickListener {
+            override fun onItemLongClick(view: String, position: Int): Boolean {
                 var cont = 0
-                val dados : Categoria = Gson().fromJson(view, object :TypeToken<Categoria>() {}.type)
-                val dadosLocais : MutableList<Local>? =
+                val dados: Categoria =
+                    Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
+                val dadosLocais: MutableList<Local>? =
                     dao.buscaTodosLocaisClicandoCategoria(dados.descricao)
-                for(lista in dadosLocais!!){
-                    Log.e("teste", lista.descricao)
-                    cont++
+
+                val dialog = Dialog(this@FormularioLocalActivity)
+                dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(layoutInflater.inflate(R.layout.dialog_edit_delete, null))
+                dialog.show()
+
+                val editar = dialog.options_editar
+                val deletar = dialog.options_excluir
+
+                editar.setOnClickListener { }
+
+                deletar.setOnClickListener {
+                    if ((dados.descricao == "taxi") || (dados.descricao == "barbearia") || (dados.descricao == "mecanico") || (dados.descricao == "aquario") || (dados.descricao == "choperia")) {
+                        val alertDialog = AlertDialog.Builder(this@FormularioLocalActivity)
+                        dialog.dismiss()
+                        alertDialog.setTitle("Informativo")
+                        alertDialog.setMessage("Exclusão categoria padrão não permitida!")
+                        alertDialog.setPositiveButton("Entendi") { alertdialog, which ->
+                            alertdialog.dismiss()
+                        }
+
+                        val dialog: AlertDialog = alertDialog.create()
+                        dialog.show()
+                    } else {
+                        Log.e("teste", "clicklongo $view, $position, $dadosLocais")
+                        if (dadosLocais!!.isNotEmpty()) {
+                            for (lista in dadosLocais!!) {
+                                cont++
+                            }
+                        }
+                        if (cont > 0) {
+                            Toast.makeText(
+                                this@FormularioLocalActivity,
+                                "Necessário deletar todos Locais no mapa cont $cont",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@FormularioLocalActivity,
+                                "Categoria ${dados.descricao} removida cont $cont",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            finish()
+                            dao.deleteCategoria(dados)
+                            onResume()
+                        }
+                    }
                 }
-                if (cont>0){
-                    Toast.makeText(this@FormularioLocalActivity, "Necessário deletar todos Locais no mapa", Toast.LENGTH_LONG).show()
-                }else{
-                    Toast.makeText(this@FormularioLocalActivity, "Categoria ${dados.descricao} removida", Toast.LENGTH_LONG).show()
-                    dao.deleteCategoria(dados)
-                    configuraListaRecyclerView()
-                }
-            return true
+                return true
             }
         })
+
     }
 
     private fun configuraInicializacaoDosCampos() {
