@@ -25,6 +25,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
@@ -42,6 +45,7 @@ import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 import kotlinx.android.synthetic.main.alert_dialog_custom.*
 import kotlinx.android.synthetic.main.dialog_edit_delete.*
+import kotlinx.android.synthetic.main.item_categoria_com_descricao.*
 import java.io.File
 
 class FormularioLocalActivity : AppCompatActivity() {
@@ -55,6 +59,7 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var helper: FormularioLocalHelper
     private val dao = LocalDAO(this)
     private var id_icon: Int = 0
+    private lateinit var imageCheck: ImageView
     private lateinit var listaCategoria: MutableList<Categoria>
     private lateinit var adapter: ActivityLocalAdapter
 
@@ -66,7 +71,6 @@ class FormularioLocalActivity : AppCompatActivity() {
         vaiParaFormularioCategoria()
         configuraInicializacaoDosCampos()
         configuraListaRecyclerView()
-
         intent?.let { intent ->
             intent.getStringExtra(PATH_FORMULARIO)?.let { jsonData ->
                 val locallatlng: LatLng =
@@ -75,7 +79,6 @@ class FormularioLocalActivity : AppCompatActivity() {
                 campo_longitude.text = locallatlng.longitude.toString()
             }
         }
-
     }
 
     override fun onResume() {
@@ -88,6 +91,7 @@ class FormularioLocalActivity : AppCompatActivity() {
         listaCategoria = dao.selectAllCategorias()
         adapter = ActivityLocalAdapter(listaCategoria.toMutableList())
         formulario_local_recyclerview.adapter = adapter
+
         configuraClickItemLista()
     }
 
@@ -120,12 +124,12 @@ class FormularioLocalActivity : AppCompatActivity() {
                             alertdialog.dismiss()
                         }
 
-                        val dialog: AlertDialog = alertDialog.create()
-                        dialog.show()
+                        val dialogAl: AlertDialog = alertDialog.create()
+                        dialogAl.show()
                     } else {
                         Log.e("teste", "clicklongo $view, $position, $dadosLocais")
                         if (dadosLocais!!.isNotEmpty()) {
-                            for (lista in dadosLocais!!) {
+                            for (lista in dadosLocais) {
                                 cont++
                             }
                         }
@@ -167,6 +171,7 @@ class FormularioLocalActivity : AppCompatActivity() {
     private fun configuraClickItemLista() {
         adapter.setOnItemCLickListener(object : OnItemCLickListener {
             override fun onItemClick(view: String, position: Int) {
+                adapter.notifyDataSetChanged()
                 val categoria: Categoria =
                     Gson().fromJson(view, object : TypeToken<Categoria>() {}.type)
                 id_icon = categoria.id!!
@@ -325,7 +330,7 @@ class FormularioLocalActivity : AppCompatActivity() {
                         campo_Imagem.setImageResource(R.drawable.notification)
                         notification.visibility = View.VISIBLE
                     }
-                    id_icon.equals(0) -> {
+                    id_icon == 0 -> {
                         Toast.makeText(this, SELECIONA_ICON, Toast.LENGTH_LONG).show()
                     }
                     else -> {

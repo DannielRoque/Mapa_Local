@@ -1,5 +1,6 @@
 package estudo.com.mapalocal.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,9 @@ class ActivityLocalAdapter(
 
     override fun onBindViewHolder(holder: ActivityLoacalViewHolder, position: Int) {
         holder.bind(listaLocal[position])
+        if (listaLocal[position].selecionado.equals(false)) {
+            listaLocal[position].selecionado = true
+        }
     }
 
     fun setOnItemCLickListener(onItemCLickListener: OnItemCLickListener) {
@@ -45,10 +49,14 @@ class ActivityLocalAdapter(
         private val campo_descricao = itemView.item_categoria_descricao
         private val objetoParaEnvio = Gson()
 
-        fun bind(categoria: Categoria) {
+        fun bind(
+            categoria: Categoria
+        ) {
+            Log.e("teste", "fora click")
             itemView.setOnClickListener {
                 val arquivo = objetoParaEnvio.toJson(categoria)
                 onItemCLickListener.onItemClick(arquivo, layoutPosition)
+                Log.e("teste", " dentro click ${categoria.selecionado}")
             }
 
             itemView.setOnLongClickListener {
@@ -58,6 +66,7 @@ class ActivityLocalAdapter(
 
             categoria.caminhoIcone?.let { campo_imagem.setImageResource(it) }
             categoria.descricao.let { campo_descricao.text = it }
+            Log.e("teste", "fora tudo ${categoria.selecionado}")
         }
     }
 }
