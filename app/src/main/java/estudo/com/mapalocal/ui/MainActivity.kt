@@ -243,7 +243,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     private fun configuraSearch(description: String) {
         val listaPosicaoSearch: MutableList<LatLng> = arrayListOf()
-        val caminho: Int? = null
+        var caminho: Int? = null
         if (!description.equals(null)) {
             val listaSearch = dao.selectLocal(description)
             for (busca in listaSearch) {
@@ -252,7 +252,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 latlong = LatLng(latitude, longitude)
                 listaPosicaoSearch.add(latlong)
                 listaCategorias = dao.buscaTodasCategoriasOndeLocal(busca.descricao)!!
-
+                for (dados in listaCategorias){
+                    caminho = dados.caminhoIcone
+                }
                 configuraMarkerPersonalizado(caminho, busca)
             }
             chamaBounds(listaPosicaoSearch)
@@ -261,7 +263,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     private fun configuraListaLocaisComTodosRetornadosBD() {
         mMap.clear()
-        val caminho: Int? = null
+        var caminho: Int? = null
         listaLocais = dao.selectAllLocal()
 
         if (!listaLocais.equals("")) {
@@ -270,7 +272,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 longitude = parseDouble(local.longitude)
                 latlong = LatLng(latitude, longitude)
                 listaCategorias = dao.buscaTodasCategoriasOndeLocal(local.descricao)!!
+                for (datos in listaCategorias){
+                    caminho = datos.caminhoIcone
                 configuraMarkerPersonalizado(caminho, local)
+                Log.e("teste", "caminho $caminho")
+                }
             }
         }
     }
@@ -279,16 +285,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         caminho: Int?,
         local: Local
     ) {
-        var caminho1 = caminho
-        for (cat in listaCategorias) {
-            caminho1 = cat.caminhoIcone!!
-        }
-
         val addMarker = mMap.addMarker(
             MarkerOptions().position(latlong)
                 .title(local.descricao)
                 .snippet(local.telefone)
-                .icon(BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho1!!)))
+                .icon(BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho!!)))
         )
         val infoWindow: GoogleMap.InfoWindowAdapter = InfoWindowPersonalizado(this, local)
         mMap.setInfoWindowAdapter(infoWindow)
