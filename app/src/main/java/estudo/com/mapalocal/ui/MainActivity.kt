@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var client: FusedLocationProviderClient? = null
     private var listaCategorias: MutableList<Categoria> = arrayListOf()
     private var listaLocais: MutableList<Local> = arrayListOf()
+    private lateinit var local : Local
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +99,69 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         mMap.setOnMapLongClickListener(this)
         mMap.setOnInfoWindowClickListener(this)
         configuraListaLocaisComTodosRetornadosBD()
+
+        mMap.setOnInfoWindowClickListener {
+
+            val lat = it.position.latitude.toString()
+            val lng = it.position.longitude.toString()
+            val localLista = dao.selectLocalPosition(lat, lng)
+
+            for (loc in localLista){
+                local = loc
+            }
+            Log.e("teste", "local é ${local.descricao}")
+            it?.hideInfoWindow()
+            val dialog = Dialog(this)
+            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(layoutInflater.inflate(R.layout.dialog_options, null))
+            dialog.show()
+
+            val ligar: TextView = dialog.options_ligar
+            val site: TextView = dialog.options_site
+            val editar: TextView = dialog.options_editar
+            val excluir: TextView = dialog.options_excluir
+
+            ligar.setOnClickListener {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.CALL_PHONE),
+                        PHONE
+                    )
+                } else {
+                    val intentLigar = Intent(Intent.ACTION_CALL)
+                    intentLigar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intentLigar.data = Uri.parse("tel:" + local.telefone)
+                    startActivity(intentLigar)
+                    dialog.dismiss()
+                }
+            }
+
+
+            site.setOnClickListener {
+                var versite: String = local.site
+                if (!versite.startsWith("https://")) {
+                    versite = "https://$versite"
+                }
+                dialog.dismiss()
+                webView.loadUrl(versite)
+                webView.visibility = View.VISIBLE
+            }
+            editar.setOnClickListener {
+                Log.e("teste", "edit")
+            }
+            excluir.setOnClickListener {
+                dao.deleteLocal(local)
+                dao.deleteLocal_has_Categoria(local_id = local.descricao)
+                Toast.makeText(this, "${local.descricao} removido com sucesso!", Toast.LENGTH_LONG)
+                    .show()
+                dialog.dismiss()
+                configuraListaLocaisComTodosRetornadosBD()
+                Log.e("teste", "delete ${local.id}")
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -274,7 +338,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 listaCategorias = dao.buscaTodasCategoriasOndeLocal(local.descricao)!!
                 for (datos in listaCategorias){
                     caminho = datos.caminhoIcone
-                configuraMarkerPersonalizado(caminho, local)
                 Log.e("teste", "caminho $caminho")
                 }
             }
@@ -295,62 +358,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         mMap.setInfoWindowAdapter(infoWindow)
         addMarker.tag
 
-
-        mMap.setOnInfoWindowClickListener {
-
-
-            it?.hideInfoWindow()
-            val dialog = Dialog(this)
-            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(layoutInflater.inflate(R.layout.dialog_options, null))
-            dialog.show()
-
-            val ligar: TextView = dialog.options_ligar
-            val site: TextView = dialog.options_site
-            val editar: TextView = dialog.options_editar
-            val excluir: TextView = dialog.options_excluir
-
-            ligar.setOnClickListener {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
-                    != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.CALL_PHONE),
-                        PHONE
-                    )
-                } else {
-                    val intentLigar = Intent(Intent.ACTION_CALL)
-                    intentLigar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    intentLigar.data = Uri.parse("tel:" + local.telefone)
-                    startActivity(intentLigar)
-                    dialog.dismiss()
-                }
-            }
-
-
-            site.setOnClickListener {
-                var versite: String = local.site
-                if (!versite.startsWith("https://")) {
-                    versite = "https://$versite"
-                }
-                dialog.dismiss()
-                webView.loadUrl(versite)
-                webView.visibility = View.VISIBLE
-            }
-            editar.setOnClickListener {
-                Log.e("teste", "edit")
-            }
-            excluir.setOnClickListener {
-                dao.deleteLocal(local)
-                dao.deleteLocal_has_Categoria(local_id = local.descricao)
-                Toast.makeText(this, "${local.descricao} removido com sucesso!", Toast.LENGTH_LONG)
-                    .show()
-                dialog.dismiss()
-                configuraListaLocaisComTodosRetornadosBD()
-                Log.e("teste", "delete ${local.id}")
-            }
-        }
+//}
     }
 
     private fun configuraListaCategoriasHome() {

@@ -37,4 +37,8 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
         local.longitude = campoLongitude.text.toString()
         return local
     }
+
+    fun preencheFormulario(){
+
+    }
 }

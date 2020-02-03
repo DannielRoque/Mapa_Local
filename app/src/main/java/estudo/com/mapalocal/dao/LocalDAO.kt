@@ -149,6 +149,18 @@ class LocalDAO(
         return localSearch
     }
 
+    fun selectLocalPosition(lat : String, lng : String) : MutableList<Local>{
+        val db : SQLiteDatabase = readableDatabase
+        val sql = "SELECT *FROM LOCAL WHERE latitude = $lat AND longitude = $lng"
+        val cursor : Cursor = db.rawQuery(sql, null)
+        val localPosition : MutableList<Local> = arrayListOf()
+        if(!cursor.equals(null)){
+            val local = Local()
+            localPosition.add(local)
+        }
+        return localPosition
+    }
+
     fun selectAllLocal(): MutableList<Local> {
         val db: SQLiteDatabase = writableDatabase
         val sql = "SELECT * FROM LOCAL"
