@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -32,8 +33,10 @@ import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.*
 import estudo.com.mapalocal.dao.LocalDAO
 import estudo.com.mapalocal.modelo.Categoria
+import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.adapter.ActivityLocalAdapter
 import estudo.com.mapalocal.ui.adapter.OnItemCLickListener
+import estudo.com.mapalocal.ui.adapter.OnItemLongClickListener
 import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 import kotlinx.android.synthetic.main.alert_dialog_custom.*
@@ -70,10 +73,12 @@ class FormularioLocalActivity : AppCompatActivity() {
                 campo_longitude.text = locallatlng.longitude.toString()
             }
         }
+
     }
 
     override fun onResume() {
         configuraListaRecyclerView()
+        configuraClickLongo()
         super.onResume()
     }
 
@@ -82,6 +87,29 @@ class FormularioLocalActivity : AppCompatActivity() {
         adapter = ActivityLocalAdapter(listaCategoria.toMutableList())
         formulario_local_recyclerview.adapter = adapter
         configuraClickItemLista()
+    }
+
+    fun configuraClickLongo(){
+        adapter.setOnItemLongClickListener(object : OnItemLongClickListener{
+            override fun onItemLongClick(view: String, position: Int) : Boolean{
+                var cont = 0
+                val dados : Categoria = Gson().fromJson(view, object :TypeToken<Categoria>() {}.type)
+                val dadosLocais : MutableList<Local>? =
+                    dao.buscaTodosLocaisClicandoCategoria(dados.descricao)
+                for(lista in dadosLocais!!){
+                    Log.e("teste", lista.descricao)
+                    cont++
+                }
+                if (cont>0){
+                    Toast.makeText(this@FormularioLocalActivity, "Necessário deletar todos Locais no mapa", Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(this@FormularioLocalActivity, "Categoria ${dados.descricao} removida", Toast.LENGTH_LONG).show()
+                    dao.deleteCategoria(dados)
+                    configuraListaRecyclerView()
+                }
+            return true
+            }
+        })
     }
 
     private fun configuraInicializacaoDosCampos() {

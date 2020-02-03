@@ -67,7 +67,7 @@ class LocalDAO(
         db.update("CATEGORIA", values, "id=?", params)
     }
 
-    fun delete(categoria: Categoria) {
+    fun deleteCategoria(categoria: Categoria) {
         val db: SQLiteDatabase = writableDatabase
         val params: Array<String> = arrayOf(categoria.id.toString())
         db.delete("CATEGORIA", "id = ?", params)
@@ -186,11 +186,14 @@ class LocalDAO(
         dado.put("local_descricao", local_descricao)
         dado.put("categoria_descricao", categoria_descricao)
         db.insert("LOCAL_HAS_CATEGORIA", null, dado)
-        Log.e("teste", "executou $dado")
+        Log.e("teste", "executou $dado $local_descricao")
     }
 
-    fun deleteLocal_has_Categoria(local_id: Int, categoria_id: Int) {
-
+    fun deleteLocal_has_Categoria(local_id : String) {
+        val db : SQLiteDatabase = writableDatabase
+        val params : Array<String> = arrayOf(local_id)
+        db.delete("LOCAL_HAS_CATEGORIA", "local_descricao = ?", params)
+        Log.e("teste" ,"banco $local_id")
     }
 
     fun buscaTodosLocaisClicandoCategoria(descricaoSelecionada: String): MutableList<Local>? {

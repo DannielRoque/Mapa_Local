@@ -7,9 +7,3 @@ interface OnItemCLickListener{
     )
 }
 
-interface OnItemLongClickListener{
-    fun onItemLongClick(
-        view: String,
-        position: Int
-    ) : Boolean
-}

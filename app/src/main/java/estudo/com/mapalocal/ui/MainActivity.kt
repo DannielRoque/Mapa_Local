@@ -204,13 +204,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         if (ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), CODE_ERRO
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), CODE_ERRO
                 )
             }
         } else {
@@ -340,7 +340,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 Log.e("teste", "edit")
             }
             excluir.setOnClickListener {
-                Log.e("teste", "delete")
+                dao.deleteLocal(local)
+                dao.deleteLocal_has_Categoria(local_id = local.descricao)
+                Toast.makeText(this, "${local.descricao} removido com sucesso!", Toast.LENGTH_LONG).show()
+                dialog.dismiss()
+                configuraListaLocaisComTodosRetornadosBD()
+                Log.e("teste", "delete ${local.id}")
             }
         }
     }

@@ -15,6 +15,7 @@ class ActivityLocalAdapter(
 ) : RecyclerView.Adapter<ActivityLocalAdapter.ActivityLoacalViewHolder>() {
 
     private lateinit var onItemCLickListener: OnItemCLickListener
+    private lateinit var onItemLongClickListener: OnItemLongClickListener
 
     override fun getItemCount(): Int {
         return listaLocal.size
@@ -34,6 +35,10 @@ class ActivityLocalAdapter(
         this.onItemCLickListener = onItemCLickListener
     }
 
+    fun setOnItemLongClickListener(onItemLongClickListener: OnItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener
+    }
+
     inner class ActivityLoacalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val campo_imagem = itemView.item_categoria_imagem
@@ -45,6 +50,12 @@ class ActivityLocalAdapter(
                 val arquivo = objetoParaEnvio.toJson(categoria)
                 onItemCLickListener.onItemClick(arquivo, layoutPosition)
             }
+
+            itemView.setOnLongClickListener {
+                val arquivoLong = objetoParaEnvio.toJson(categoria)
+                onItemLongClickListener.onItemLongClick(arquivoLong, layoutPosition)
+            }
+
             categoria.caminhoIcone?.let { campo_imagem.setImageResource(it) }
             categoria.descricao.let { campo_descricao.text = it }
         }
