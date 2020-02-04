@@ -121,7 +121,6 @@ class LocalDAO(
 
     private fun pegaLocal(local: Local): ContentValues {
         val dados = ContentValues()
-        dados.put("id", local.id)
         dados.put("caminhoImagem", local.caminhoImagem)
         dados.put("descricao", local.descricao)
         dados.put("telefone", local.telefone)
@@ -131,11 +130,12 @@ class LocalDAO(
         return dados
     }
 
-    fun updateLocal(local: Local) {
+    fun updateLocal(local: Local, id : Int) {
         val db: SQLiteDatabase = writableDatabase
         val values: ContentValues = pegaLocal(local)
-        val params: Array<String> = arrayOf(local.id.toString())
-        db.update("LOCAL", values, "id =?", params)
+        val params: Array<String> = arrayOf(id.toString())
+        db.update("LOCAL", values, "id=?", params)
+        Log.e("ROQUE", "dentro update ${params.first()}")
     }
 
     fun deleteLocal(local: Local) {
@@ -225,6 +225,15 @@ class LocalDAO(
         Log.e("teste", "banco $local_id")
     }
 
+    fun updateLocal_has_categoria(local_descricao: String, categoria_descricao: String){
+        val db: SQLiteDatabase = writableDatabase
+        val dado = ContentValues()
+        dado.put("local_descricao", local_descricao)
+        dado.put("categoria_descricao", categoria_descricao)
+        val params : Array<String> = arrayOf(local_descricao)
+        db.update("LOCAL_HAS_CATEGORIA", dado, "local_descricao = ?", params)
+    }
+
     fun buscaTodosLocaisClicandoCategoria(descricaoSelecionada: String): MutableList<Local>? {
         Log.e("teste", "descricao entrada $descricaoSelecionada")
         if (descricaoSelecionada.equals(null)) return null
@@ -283,9 +292,4 @@ class LocalDAO(
             Log.e("teste", "delete local $localId")
         }
     }
-
-//    fun deleteAllLocalOnCategoria(local: Local) {
-//        val db: SQLiteDatabase = writableDatabase
-//        val sql = "DELETE "
-//    }
 }

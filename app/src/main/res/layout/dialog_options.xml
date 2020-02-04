@@ -85,6 +85,7 @@
             android:layout_height="29dp"
             android:layout_marginStart="40dp"
             android:src="@drawable/edit_options"
+            android:visibility="gone"
             android:background="?android:attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="@id/options_editar"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +100,7 @@
             android:textAlignment="center"
             android:background="?android:attr/selectableItemBackground"
             android:textSize="24sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/options_site" />
@@ -108,6 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/corAux"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/options_excluir"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

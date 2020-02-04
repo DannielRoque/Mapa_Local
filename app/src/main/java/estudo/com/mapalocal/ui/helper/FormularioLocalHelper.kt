@@ -36,7 +36,6 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
     }
 
     fun preencheFormulario(local: Local) {
-
         campoDescricao.setText(local.descricao)
         campoTelefone.setText(local.telefone)
         campoSite.setText(local.site)

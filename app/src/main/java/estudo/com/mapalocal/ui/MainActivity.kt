@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                     val intent = Intent(this, FormularioLocalActivity::class.java)
                     intent.putExtra(PATH_LOCAL, envio)
                     startActivity(intent)
-
+                    dialog.dismiss()
                 }
                 excluir.setOnClickListener {
                     dao.deleteLocal(local)

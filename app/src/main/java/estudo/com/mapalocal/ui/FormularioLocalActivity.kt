@@ -48,8 +48,8 @@ import java.io.File
 class FormularioLocalActivity : AppCompatActivity() {
 
     private lateinit var caminhoImagem: String
-    private lateinit var campo_telefone:EditText
-    private lateinit var campo_site:EditText
+    private lateinit var campo_telefone: EditText
+    private lateinit var campo_site: EditText
     private lateinit var campo_Imagem: ImageView
     private lateinit var campo_descricao: EditText
     private lateinit var campo_latitude: TextView
@@ -58,6 +58,7 @@ class FormularioLocalActivity : AppCompatActivity() {
     private lateinit var helper: FormularioLocalHelper
     private val dao = LocalDAO(this)
     private var id_icon: Int = 0
+    private var idreferenciaEdit : Int = 0
     private lateinit var listaCategoria: MutableList<Categoria>
     private lateinit var adapter: ActivityLocalAdapter
 
@@ -78,10 +79,12 @@ class FormularioLocalActivity : AppCompatActivity() {
             }
         }
 
-        intent?.let {intent ->
+        intent?.let { intent ->
             intent.getStringExtra(PATH_LOCAL)?.let { jsonLocal ->
-                val local : Local = Gson().fromJson(jsonLocal, object  : TypeToken<Local>() {}.type)
+                val local: Local = Gson().fromJson(jsonLocal, object : TypeToken<Local>() {}.type)
                 helper.preencheFormulario(local)
+                Log.e("ROQUE", "${local.id}")
+                idreferenciaEdit = local.id!!
             }
         }
     }
@@ -327,7 +330,7 @@ class FormularioLocalActivity : AppCompatActivity() {
             R.id.menu_salvar -> {
                 notification.visibility = View.GONE
                 val local = helper.pegaLocal()
-
+                Log.e("ROQUE", "teste ${local.id} teste ref $idreferenciaEdit")
 
                 when {
                     campo_descricao.text.toString().trim().equals("") -> {
@@ -341,14 +344,27 @@ class FormularioLocalActivity : AppCompatActivity() {
                     id_icon == 0 -> {
                         Toast.makeText(this, SELECIONA_ICON, Toast.LENGTH_LONG).show()
                     }
+
+                    idreferenciaEdit!=0 -> {
+                        Log.e("ROQUE", "dentro alter $idreferenciaEdit")
+                        dao.updateLocal(local, idreferenciaEdit)
+                        dao.updateLocal_has_categoria(
+                            local_descricao = local.descricao,
+                            categoria_descricao = campo_id_categoria.text.toString()
+                        )
+                        Toast.makeText(this, "Alteração realizada com sucesso", Toast.LENGTH_LONG)
+                            .show()
+                        dao.close()
+                        finish()
+                    }
                     else -> {
-
-                            dao.insertLocal(local)
-                            dao.insertLocal_has_Categoria(
-                                local_descricao = local.descricao,
-                                categoria_descricao = campo_id_categoria.text.toString()
-                            )
-
+                        Log.e("ROQUE", "dentro insert ${local.descricao}")
+                        dao.insertLocal(local)
+                        dao.insertLocal_has_Categoria(
+                            local_descricao = local.descricao,
+                            categoria_descricao = campo_id_categoria.text.toString()
+                        )
+                        dao.close()
                         finish()
                     }
                 }
