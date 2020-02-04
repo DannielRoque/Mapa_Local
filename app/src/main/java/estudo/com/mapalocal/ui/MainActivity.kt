@@ -447,7 +447,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             val bounds: LatLngBounds = builder.build()
             val cu: CameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
             mMap.animateCamera(cu)
-            mMap.minZoomLevel
+            mMap.maxZoomLevel
         }
     }
 

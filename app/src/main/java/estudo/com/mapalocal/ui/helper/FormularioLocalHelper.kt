@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputLayout
 import com.squareup.picasso.Picasso
+import estudo.com.mapalocal.dao.LocalDAO
 import estudo.com.mapalocal.modelo.Categoria
 import estudo.com.mapalocal.modelo.Local
 import estudo.com.mapalocal.ui.FormularioLocalActivity
@@ -14,6 +15,8 @@ import kotlinx.android.synthetic.main.activity_formulario_local.*
 import java.io.File
 
 class FormularioLocalHelper(activity: FormularioLocalActivity) {
+
+    val dao = LocalDAO(activity)
 
     private val campoImagemLocal: ImageView = activity.activity_formulario_imagem_local
     private val campoDescricao: EditText = activity.activity_local_formulario_descricao
@@ -42,7 +45,9 @@ class FormularioLocalHelper(activity: FormularioLocalActivity) {
         campoLatitude.text = local.latitude
         campoLongitude.text = local.longitude
         carregaImagem(local.caminhoImagem!!)
-//        campoCategoriaId.text = categoria.id.toString()
+        var dadosReturn = dao.selectCategoria(local.descricao)
+        val categoria = dadosReturn.first()
+        campoCategoriaId.text = categoria.id.toString()
     }
 
     fun carregaImagem(caminhoFoto: String) {

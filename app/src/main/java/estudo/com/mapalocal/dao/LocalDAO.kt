@@ -74,18 +74,23 @@ class LocalDAO(
         db.delete("CATEGORIA", "id = ?", params)
     }
 
-    fun selectCategoria(dadoPassado: String): Categoria {
+    fun selectCategoria(dadoPassado: String): MutableList<Categoria> {
         Log.e("teste", "dentro selectCategoria $dadoPassado")
         val db: SQLiteDatabase = readableDatabase
         val sql =
             "SELECT c.* FROM local_has_categoria as lc INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao WHERE l.descricao = '$dadoPassado' "
         val cursor: Cursor = db.rawQuery(sql, null)
-        cursor.moveToFirst()
-        val categoria = Categoria()
-        dado = categoria
+        val lista: MutableList<Categoria> = arrayListOf()
+        if (!cursor.equals(null)) {
+            while (cursor.moveToNext()) {
+                val categoria = Categoria()
+                lista.add(categoria)
+            }
+        }
 
         Log.e("teste", "selectCategoria")
-        return dado
+        cursor.close()
+        return lista
 
     }
 
@@ -130,7 +135,7 @@ class LocalDAO(
         return dados
     }
 
-    fun updateLocal(local: Local, id : Int) {
+    fun updateLocal(local: Local, id: Int) {
         val db: SQLiteDatabase = writableDatabase
         val values: ContentValues = pegaLocal(local)
         val params: Array<String> = arrayOf(id.toString())
@@ -225,12 +230,12 @@ class LocalDAO(
         Log.e("teste", "banco $local_id")
     }
 
-    fun updateLocal_has_categoria(local_descricao: String, categoria_descricao: String){
+    fun updateLocal_has_categoria(local_descricao: String, categoria_descricao: String) {
         val db: SQLiteDatabase = writableDatabase
         val dado = ContentValues()
         dado.put("local_descricao", local_descricao)
         dado.put("categoria_descricao", categoria_descricao)
-        val params : Array<String> = arrayOf(local_descricao)
+        val params: Array<String> = arrayOf(local_descricao)
         db.update("LOCAL_HAS_CATEGORIA", dado, "local_descricao = ?", params)
     }
 

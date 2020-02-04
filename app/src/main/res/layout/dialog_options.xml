@@ -98,9 +98,9 @@
             android:layout_marginTop="10dp"
             android:text="@string/editar"
             android:textAlignment="center"
+            android:visibility="gone"
             android:background="?android:attr/selectableItemBackground"
             android:textSize="24sp"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/options_site" />
@@ -110,9 +110,9 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/corAux"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/options_excluir"
             app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/options_editar" />
 
