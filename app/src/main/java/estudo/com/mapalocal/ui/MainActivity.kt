@@ -107,9 +107,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             val localLista = dao.selectLocalPosition(lat, lng)
             Log.e("teste", "locallista $lat $lng")
 
-            for (loc in localLista){
-            Log.e("teste", "local é ${loc.caminhoImagem}")
-            }
+
+            local=localLista
+            Log.e("teste", "local é ${local.caminhoImagem}")
+
             it?.hideInfoWindow()
             val dialog = Dialog(this)
             dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
@@ -150,7 +151,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 webView.visibility = View.VISIBLE
             }
             editar.setOnClickListener {
-                Log.e("teste", "edit")
+
+                val objectJson = Gson()
+                val envio = objectJson.toJson(local)
+                Log.e("teste", "dado selecionado ${local.descricao}")
+                val intent = Intent(this, FormularioLocalActivity::class.java)
+                intent.putExtra(PATH_LOCAL, envio)
+                startActivity(intent)
+
             }
             excluir.setOnClickListener {
                 dao.deleteLocal(local)

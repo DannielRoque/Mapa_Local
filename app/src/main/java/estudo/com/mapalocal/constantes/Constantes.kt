@@ -14,3 +14,4 @@ const val GALERIA = "Galeria"
 const val VAZIO = "Preencha o campo para prosseguir"
 const val SELECIONA_ICON = "Selecione uma Categoria"
 const val PHONE = 123
+const val PATH_LOCAL = "local"

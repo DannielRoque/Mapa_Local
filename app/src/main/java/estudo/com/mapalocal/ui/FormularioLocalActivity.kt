@@ -18,6 +18,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -25,13 +26,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.squareup.picasso.Picasso
 import estudo.com.mapalocal.BuildConfig
 import estudo.com.mapalocal.R
 import estudo.com.mapalocal.constantes.*
@@ -45,21 +43,21 @@ import estudo.com.mapalocal.ui.helper.FormularioLocalHelper
 import kotlinx.android.synthetic.main.activity_formulario_local.*
 import kotlinx.android.synthetic.main.alert_dialog_custom.*
 import kotlinx.android.synthetic.main.dialog_edit_delete.*
-import kotlinx.android.synthetic.main.item_categoria_com_descricao.*
 import java.io.File
 
 class FormularioLocalActivity : AppCompatActivity() {
 
     private lateinit var caminhoImagem: String
+    private lateinit var campo_telefone:EditText
+    private lateinit var campo_site:EditText
     private lateinit var campo_Imagem: ImageView
-    private lateinit var campo_descricao: TextInputLayout
+    private lateinit var campo_descricao: EditText
     private lateinit var campo_latitude: TextView
     private lateinit var campo_longitude: TextView
     private lateinit var campo_id_categoria: TextView
     private lateinit var helper: FormularioLocalHelper
     private val dao = LocalDAO(this)
     private var id_icon: Int = 0
-    private lateinit var imageCheck: ImageView
     private lateinit var listaCategoria: MutableList<Categoria>
     private lateinit var adapter: ActivityLocalAdapter
 
@@ -78,6 +76,13 @@ class FormularioLocalActivity : AppCompatActivity() {
                 campo_latitude.text = locallatlng.latitude.toString()
                 campo_longitude.text = locallatlng.longitude.toString()
             }
+        }
+
+        //esta chegando objeto null assim ocorre erro ao tentar editar
+        val intent : Intent = Intent()
+        val dadoLocal : Local = intent.getSerializableExtra(PATH_LOCAL) as Local
+        if (dadoLocal != null){
+        helper.preencheFormulario(dadoLocal)
         }
     }
 
@@ -164,6 +169,8 @@ class FormularioLocalActivity : AppCompatActivity() {
         campo_latitude = local_campo_latitude
         campo_longitude = local_campo_longitude
         campo_id_categoria = activity_formulario_campo_categoria_id
+        campo_telefone = activity_formulario_telefone
+        campo_site = activity_formulario_site
         helper = FormularioLocalHelper(this)
         activity_formulario_imagem_local.setImageResource(R.drawable.image_tela_categoria)
     }
@@ -321,12 +328,13 @@ class FormularioLocalActivity : AppCompatActivity() {
                 notification.visibility = View.GONE
                 val local = helper.pegaLocal()
 
+
                 when {
-                    campo_descricao.editText!!.text.toString().trim().equals("") -> {
+                    campo_descricao.text.toString().trim().equals("") -> {
                         configuraErroDescricaoVazia()
                     }
                     local.caminhoImagem.equals(null) -> {
-                        activity_local_formulario_descricao.error = null
+                        activity_local_formulario_descricao_hint.error = null
                         campo_Imagem.setImageResource(R.drawable.notification)
                         notification.visibility = View.VISIBLE
                     }
@@ -334,11 +342,15 @@ class FormularioLocalActivity : AppCompatActivity() {
                         Toast.makeText(this, SELECIONA_ICON, Toast.LENGTH_LONG).show()
                     }
                     else -> {
-                        dao.insertLocal(local)
-                        dao.insertLocal_has_Categoria(
-                            local_descricao = local.descricao,
-                            categoria_descricao = campo_id_categoria.text.toString()
-                        )
+                        if (local.id != 0) {
+                            Log.e("teste", "salvar editado")
+                        } else {
+                            dao.insertLocal(local)
+                            dao.insertLocal_has_Categoria(
+                                local_descricao = local.descricao,
+                                categoria_descricao = campo_id_categoria.text.toString()
+                            )
+                        }
                         finish()
                     }
                 }
@@ -348,8 +360,8 @@ class FormularioLocalActivity : AppCompatActivity() {
     }
 
     private fun configuraErroDescricaoVazia() {
-        activity_local_formulario_descricao.error = VAZIO
-        activity_local_formulario_descricao.requestFocus()
+        activity_local_formulario_descricao_hint.error = VAZIO
+        activity_local_formulario_descricao_hint.requestFocus()
         val focoTeclado: InputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         focoTeclado.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)

@@ -72,19 +72,20 @@
                 app:layout_constraintEnd_toStartOf="@id/activity_formulario_botao_imagem_local"/>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/activity_local_formulario_descricao"
+                android:id="@+id/activity_local_formulario_descricao_hint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16sp"
                 android:layout_marginStart="16sp"
-                app:layout_constraintBottom_toTopOf="@id/activity_formulario_telefone"
+                app:layout_constraintBottom_toTopOf="@id/activity_formulario_telefone_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/activity_formulario_botao_imagem_local">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
+                    android:id="@+id/activity_local_formulario_descricao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/descricao"
@@ -95,16 +96,17 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/activity_formulario_telefone"
+                android:id="@+id/activity_formulario_telefone_hint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8sp"
-                app:layout_constraintEnd_toEndOf="@id/activity_local_formulario_descricao"
-                app:layout_constraintStart_toStartOf="@id/activity_local_formulario_descricao"
-                app:layout_constraintTop_toBottomOf="@id/activity_local_formulario_descricao">
+                app:layout_constraintEnd_toEndOf="@id/activity_local_formulario_descricao_hint"
+                app:layout_constraintStart_toStartOf="@id/activity_local_formulario_descricao_hint"
+                app:layout_constraintTop_toBottomOf="@id/activity_local_formulario_descricao_hint">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
+                    android:id="@+id/activity_formulario_telefone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/telefone"
@@ -115,16 +117,17 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/activity_formulario_site"
+                android:id="@+id/activity_formulario_site_hint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8sp"
-                app:layout_constraintEnd_toEndOf="@id/activity_formulario_telefone"
-                app:layout_constraintStart_toStartOf="@id/activity_formulario_telefone"
-                app:layout_constraintTop_toBottomOf="@id/activity_formulario_telefone">
+                app:layout_constraintEnd_toEndOf="@id/activity_formulario_telefone_hint"
+                app:layout_constraintStart_toStartOf="@id/activity_formulario_telefone_hint"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_telefone_hint">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
+                    android:id="@+id/activity_formulario_site"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/site"
@@ -146,7 +149,7 @@
                 android:textStyle="bold"
                 android:background="@drawable/button_borda"
                 app:layout_constraintBottom_toTopOf="@id/formulario_local_recyclerview"
-                app:layout_constraintTop_toBottomOf="@id/activity_formulario_site"
+                app:layout_constraintTop_toBottomOf="@id/activity_formulario_site_hint"
                 app:layout_constraintStart_toStartOf="@id/formulario_local_recyclerview"
                 app:layout_constraintEnd_toEndOf="@id/formulario_local_recyclerview"/>
 

@@ -12,6 +12,7 @@ import estudo.com.mapalocal.modelo.Local
 class LocalDAO(
     context: Context?
 ) : SQLiteOpenHelper(context, "LocalFavorito", null, 1) {
+    lateinit var  dado : Categoria
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
@@ -73,8 +74,19 @@ class LocalDAO(
         db.delete("CATEGORIA", "id = ?", params)
     }
 
-    fun selectCategoria() {
-        val sql = "SELECT descricao FROM sqlCategoria WHERE descricao = "
+    fun selectCategoria(dadoPassado : String) : Categoria {
+        Log.e("teste", "dentro selectCategoria $dadoPassado")
+        val db: SQLiteDatabase = readableDatabase
+        val sql =
+            "SELECT c.* FROM local_has_categoria as lc INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao WHERE l.descricao = '$dadoPassado' "
+        val cursor: Cursor = db.rawQuery(sql, null)
+            cursor.moveToFirst()
+                val categoria = Categoria()
+                dado = categoria
+
+        Log.e("teste", "selectCategoria")
+            return dado
+
     }
 
     fun selectAllCategorias(): MutableList<Categoria> {
@@ -149,18 +161,15 @@ class LocalDAO(
         return localSearch
     }
 
-    fun selectLocalPosition(lat : String, lng : String) : MutableList<Local>{
+    fun selectLocalPosition(lat : String, lng : String) : Local{
         val db : SQLiteDatabase = readableDatabase
         val sql = "SELECT * FROM LOCAL WHERE latitude = $lat AND longitude = $lng"
         val cursor : Cursor = db.rawQuery(sql, null)
-        val localPosition : MutableList<Local> = arrayListOf()
-        if(!cursor.equals(null)){
-            while (cursor.moveToNext()) {
-                val local = Local()
-                localPosition.add(local)
-            }
-        }
-        return localPosition
+        var dataDeLocal : Local
+            cursor.moveToFirst()
+            val local = Local()
+            dataDeLocal = local
+            return dataDeLocal
     }
 
     fun selectAllLocal(): MutableList<Local> {
