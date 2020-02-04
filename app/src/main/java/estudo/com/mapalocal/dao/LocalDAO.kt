@@ -12,7 +12,7 @@ import estudo.com.mapalocal.modelo.Local
 class LocalDAO(
     context: Context?
 ) : SQLiteOpenHelper(context, "LocalFavorito", null, 1) {
-    lateinit var  dado : Categoria
+    lateinit var dado: Categoria
 
     override fun onCreate(db: SQLiteDatabase) {
         val sqlLocal =
@@ -74,18 +74,18 @@ class LocalDAO(
         db.delete("CATEGORIA", "id = ?", params)
     }
 
-    fun selectCategoria(dadoPassado : String) : Categoria {
+    fun selectCategoria(dadoPassado: String): Categoria {
         Log.e("teste", "dentro selectCategoria $dadoPassado")
         val db: SQLiteDatabase = readableDatabase
         val sql =
             "SELECT c.* FROM local_has_categoria as lc INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao WHERE l.descricao = '$dadoPassado' "
         val cursor: Cursor = db.rawQuery(sql, null)
-            cursor.moveToFirst()
-                val categoria = Categoria()
-                dado = categoria
+        cursor.moveToFirst()
+        val categoria = Categoria()
+        dado = categoria
 
         Log.e("teste", "selectCategoria")
-            return dado
+        return dado
 
     }
 
@@ -110,8 +110,8 @@ class LocalDAO(
 
     //configuracao banco Local abaixo
 
-    fun insertLocal(local: Local) : Long{
-        val idDoItemIncluido : Long
+    fun insertLocal(local: Local): Long {
+        val idDoItemIncluido: Long
         val db: SQLiteDatabase = writableDatabase
         val dados: ContentValues = pegaLocal(local)
         idDoItemIncluido = db.insert("LOCAL", null, dados)
@@ -144,13 +144,13 @@ class LocalDAO(
         db.delete("LOCAL", "id =?", params)
     }
 
-    fun selectLocal (descricao : String): MutableList<Local>{
-        val db : SQLiteDatabase = readableDatabase
+    fun selectLocal(descricao: String): MutableList<Local> {
+        val db: SQLiteDatabase = readableDatabase
         val sql = "SELECT * FROM LOCAL WHERE descricao LIKE '%$descricao%'"
-        val cursor : Cursor = db.rawQuery(sql, null)
-        val localSearch : MutableList<Local> = arrayListOf()
-        if (!cursor.equals(null)){
-            while (cursor.moveToNext()){
+        val cursor: Cursor = db.rawQuery(sql, null)
+        val localSearch: MutableList<Local> = arrayListOf()
+        if (!cursor.equals(null)) {
+            while (cursor.moveToNext()) {
                 val local = Local()
                 configuraLocal(local, cursor)
                 localSearch.add(local)
@@ -161,15 +161,21 @@ class LocalDAO(
         return localSearch
     }
 
-    fun selectLocalPosition(lat : String, lng : String) : Local{
-        val db : SQLiteDatabase = readableDatabase
-        val sql = "SELECT * FROM LOCAL WHERE latitude = $lat AND longitude = $lng"
-        val cursor : Cursor = db.rawQuery(sql, null)
-        var dataDeLocal : Local
-            cursor.moveToFirst()
-            val local = Local()
-            dataDeLocal = local
-            return dataDeLocal
+    fun selectLocalComDescricao(descricao: String): MutableList<Local> {
+        val db: SQLiteDatabase = readableDatabase
+        val sql = "SELECT * FROM LOCAL WHERE descricao LIKE '$descricao'"
+        val cursor: Cursor = db.rawQuery(sql, null)
+        val localSearch: MutableList<Local> = arrayListOf()
+        if (!cursor.equals(null)) {
+            while (cursor.moveToNext()) {
+                val local = Local()
+                configuraLocal(local, cursor)
+                localSearch.add(local)
+            }
+        }
+        cursor.close()
+        Log.e("teste", "$localSearch")
+        return localSearch
     }
 
     fun selectAllLocal(): MutableList<Local> {
@@ -212,11 +218,11 @@ class LocalDAO(
         Log.e("teste", "executou $dado $local_descricao")
     }
 
-    fun deleteLocal_has_Categoria(local_id : String) {
-        val db : SQLiteDatabase = writableDatabase
-        val params : Array<String> = arrayOf(local_id)
+    fun deleteLocal_has_Categoria(local_id: String) {
+        val db: SQLiteDatabase = writableDatabase
+        val params: Array<String> = arrayOf(local_id)
         db.delete("LOCAL_HAS_CATEGORIA", "local_descricao = ?", params)
-        Log.e("teste" ,"banco $local_id")
+        Log.e("teste", "banco $local_id")
     }
 
     fun buscaTodosLocaisClicandoCategoria(descricaoSelecionada: String): MutableList<Local>? {
@@ -245,8 +251,8 @@ class LocalDAO(
             "SELECT c.* FROM LOCAL_HAS_CATEGORIA as lc INNER JOIN CATEGORIA as c ON lc.categoria_descricao = c.descricao INNER JOIN LOCAL as l ON lc.local_descricao = l.descricao WHERE l.descricao = '$descricaoLocal'"
         val cursor: Cursor = db.rawQuery(sql, null)
         val categoriasSelecionadas: MutableList<Categoria> = arrayListOf()
-        if(!cursor.equals(null)){
-            while (cursor.moveToNext()){
+        if (!cursor.equals(null)) {
+            while (cursor.moveToNext()) {
                 val categoria = Categoria()
                 categoria.id = (cursor.getInt(cursor.getColumnIndex("id")))
                 categoria.caminhoIcone = (cursor.getInt(cursor.getColumnIndex("caminhoIcone")))
@@ -258,28 +264,28 @@ class LocalDAO(
         return categoriasSelecionadas
     }
 
-        fun deleteLocal_has_Categoria_Todos(local_id : MutableList<Local>) {
-                val db : SQLiteDatabase = writableDatabase
-                for (local in local_id){
-                        val localDescricao = local.descricao
-                    val params : Array<String> = arrayOf(localDescricao)
-                    db.delete("LOCAL_HAS_CATEGORIA", "local_descricao = ?", params)
-                    Log.e("teste" ,"banco $local_id")
-                 }
-          }
+    fun deleteLocal_has_Categoria_Todos(local_id: MutableList<Local>) {
+        val db: SQLiteDatabase = writableDatabase
+        for (local in local_id) {
+            val localDescricao = local.descricao
+            val params: Array<String> = arrayOf(localDescricao)
+            db.delete("LOCAL_HAS_CATEGORIA", "local_descricao = ?", params)
+            Log.e("teste", "banco $local_id")
+        }
+    }
 
-        fun deleteLocalLista(local: MutableList<Local>) {
-                val db: SQLiteDatabase = writableDatabase
-                for (listaLocal in local){
-                        val localId = listaLocal.id
-                    val params: Array<String> = arrayOf(localId.toString())
-                    db.delete("LOCAL", "id =?", params)
-                        Log.e("teste", "delete local $localId")
-                    }
-            }
+    fun deleteLocalLista(local: MutableList<Local>) {
+        val db: SQLiteDatabase = writableDatabase
+        for (listaLocal in local) {
+            val localId = listaLocal.id
+            val params: Array<String> = arrayOf(localId.toString())
+            db.delete("LOCAL", "id =?", params)
+            Log.e("teste", "delete local $localId")
+        }
+    }
 
-        fun deleteAllLocalOnCategoria(local: Local){
-                val db : SQLiteDatabase = writableDatabase
-                val sql = "DELETE "
-            }
+//    fun deleteAllLocalOnCategoria(local: Local) {
+//        val db: SQLiteDatabase = writableDatabase
+//        val sql = "DELETE "
+//    }
 }

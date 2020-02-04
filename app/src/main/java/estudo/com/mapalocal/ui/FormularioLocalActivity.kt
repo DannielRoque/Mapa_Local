@@ -78,11 +78,11 @@ class FormularioLocalActivity : AppCompatActivity() {
             }
         }
 
-        //esta chegando objeto null assim ocorre erro ao tentar editar
-        val intent : Intent = Intent()
-        val dadoLocal : Local = intent.getSerializableExtra(PATH_LOCAL) as Local
-        if (dadoLocal != null){
-        helper.preencheFormulario(dadoLocal)
+        intent?.let {intent ->
+            intent.getStringExtra(PATH_LOCAL)?.let { jsonLocal ->
+                val local : Local = Gson().fromJson(jsonLocal, object  : TypeToken<Local>() {}.type)
+                helper.preencheFormulario(local)
+            }
         }
     }
 
@@ -342,15 +342,13 @@ class FormularioLocalActivity : AppCompatActivity() {
                         Toast.makeText(this, SELECIONA_ICON, Toast.LENGTH_LONG).show()
                     }
                     else -> {
-                        if (local.id != 0) {
-                            Log.e("teste", "salvar editado")
-                        } else {
+
                             dao.insertLocal(local)
                             dao.insertLocal_has_Categoria(
                                 local_descricao = local.descricao,
                                 categoria_descricao = campo_id_categoria.text.toString()
                             )
-                        }
+
                         finish()
                     }
                 }

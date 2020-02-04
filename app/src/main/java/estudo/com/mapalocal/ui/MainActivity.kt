@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var client: FusedLocationProviderClient? = null
     private var listaCategorias: MutableList<Categoria> = arrayListOf()
     private var listaLocais: MutableList<Local> = arrayListOf()
-    private lateinit var local : Local
+//    private lateinit var local : Local
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        configuraListaLocaisComTodosRetornadosBD()
 
         if (!mMap.equals(null)) {
             val permission = ContextCompat.checkSelfPermission(
@@ -98,18 +99,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         mMap.uiSettings.isMyLocationButtonEnabled = true
         mMap.setOnMapLongClickListener(this)
         mMap.setOnInfoWindowClickListener(this)
-        configuraListaLocaisComTodosRetornadosBD()
-
         mMap.setOnInfoWindowClickListener {
 
-            val lat = it.position.latitude.toString()
-            val lng = it.position.longitude.toString()
-            val localLista = dao.selectLocalPosition(lat, lng)
-            Log.e("teste", "locallista $lat $lng")
-
-
-            local=localLista
-            Log.e("teste", "local é ${local.caminhoImagem}")
+            val localLista = dao.selectLocalComDescricao(it.title)
 
             it?.hideInfoWindow()
             val dialog = Dialog(this)
@@ -117,57 +109,66 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             dialog.setContentView(layoutInflater.inflate(R.layout.dialog_options, null))
             dialog.show()
 
-            val ligar: TextView = dialog.options_ligar
-            val site: TextView = dialog.options_site
-            val editar: TextView = dialog.options_editar
-            val excluir: TextView = dialog.options_excluir
+            for (local in localLista) {
 
-            ligar.setOnClickListener {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
-                    != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.CALL_PHONE),
-                        PHONE
-                    )
-                } else {
-                    val intentLigar = Intent(Intent.ACTION_CALL)
-                    intentLigar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    intentLigar.data = Uri.parse("tel:" + local.telefone)
-                    startActivity(intentLigar)
+                Log.e("teste", "local é ${local.caminhoImagem}")
+
+                val ligar: TextView = dialog.options_ligar
+                val site: TextView = dialog.options_site
+                val editar: TextView = dialog.options_editar
+                val excluir: TextView = dialog.options_excluir
+
+                ligar.setOnClickListener {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.CALL_PHONE),
+                            PHONE
+                        )
+                    } else {
+                        val intentLigar = Intent(Intent.ACTION_CALL)
+                        intentLigar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intentLigar.data = Uri.parse("tel:" + local.telefone)
+                        startActivity(intentLigar)
+                        dialog.dismiss()
+                    }
+                }
+
+
+                site.setOnClickListener {
+                    var versite: String = local.site
+                    if (!versite.startsWith("https://")) {
+                        versite = "https://$versite"
+                    }
                     dialog.dismiss()
+                    webView.loadUrl(versite)
+                    webView.visibility = View.VISIBLE
                 }
-            }
+                editar.setOnClickListener {
 
+                    val objectJson = Gson()
+                    val envio = objectJson.toJson(local)
+                    Log.e("teste", "dado selecionado ${local.descricao}")
+                    val intent = Intent(this, FormularioLocalActivity::class.java)
+                    intent.putExtra(PATH_LOCAL, envio)
+                    startActivity(intent)
 
-            site.setOnClickListener {
-                var versite: String = local.site
-                if (!versite.startsWith("https://")) {
-                    versite = "https://$versite"
                 }
-                dialog.dismiss()
-                webView.loadUrl(versite)
-                webView.visibility = View.VISIBLE
-            }
-            editar.setOnClickListener {
-
-                val objectJson = Gson()
-                val envio = objectJson.toJson(local)
-                Log.e("teste", "dado selecionado ${local.descricao}")
-                val intent = Intent(this, FormularioLocalActivity::class.java)
-                intent.putExtra(PATH_LOCAL, envio)
-                startActivity(intent)
-
-            }
-            excluir.setOnClickListener {
-                dao.deleteLocal(local)
-                dao.deleteLocal_has_Categoria(local_id = local.descricao)
-                Toast.makeText(this, "${local.descricao} removido com sucesso!", Toast.LENGTH_LONG)
-                    .show()
-                dialog.dismiss()
-                configuraListaLocaisComTodosRetornadosBD()
-                Log.e("teste", "delete ${local.id}")
+                excluir.setOnClickListener {
+                    dao.deleteLocal(local)
+                    dao.deleteLocal_has_Categoria(local_id = local.descricao)
+                    Toast.makeText(
+                        this,
+                        "${local.descricao} removido com sucesso!",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                    dialog.dismiss()
+                    configuraListaLocaisComTodosRetornadosBD()
+                    Log.e("teste", "delete ${local.descricao}")
+                }
             }
         }
     }
@@ -326,8 +327,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 listaCategorias = dao.buscaTodasCategoriasOndeLocal(busca.descricao)!!
                 for (dados in listaCategorias){
                     caminho = dados.caminhoIcone
+                    configuraMarkerPersonalizado(caminho, busca)
                 }
-                configuraMarkerPersonalizado(caminho, busca)
+//                if (!caminho!!.equals(null) and (!caminho.equals(""))) {
+//                }
             }
             chamaBounds(listaPosicaoSearch)
         }
@@ -338,7 +341,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         var caminho: Int? = null
         listaLocais = dao.selectAllLocal()
 
-        if (!listaLocais.equals("")) {
+        if (!listaLocais.equals("") and (listaLocais.isNotEmpty())) {
             for (local in listaLocais) {
                 latitude = parseDouble(local.latitude)
                 longitude = parseDouble(local.longitude)
@@ -347,8 +350,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 for (datos in listaCategorias){
                     caminho = datos.caminhoIcone
                 Log.e("teste", "caminho $caminho")
+                    configuraMarkerPersonalizado(caminho, local)
                 }
-                configuraMarkerPersonalizado(caminho, local)
             }
         }
     }
@@ -364,7 +367,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 .icon(BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho!!)))
         )
         Log.e("teste", "teste imagem ${local.latitude} ${local.longitude}")
-        val infoWindow: GoogleMap.InfoWindowAdapter = InfoWindowPersonalizado(this, local)
+        val infoWindow: GoogleMap.InfoWindowAdapter = InfoWindowPersonalizado(this)
         mMap.setInfoWindowAdapter(infoWindow)
         addMarker.tag
 
