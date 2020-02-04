@@ -105,11 +105,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             val lat = it.position.latitude.toString()
             val lng = it.position.longitude.toString()
             val localLista = dao.selectLocalPosition(lat, lng)
+            Log.e("teste", "locallista $lat $lng")
 
             for (loc in localLista){
-                local = loc
+            Log.e("teste", "local é ${loc.caminhoImagem}")
             }
-            Log.e("teste", "local é ${local.descricao}")
             it?.hideInfoWindow()
             val dialog = Dialog(this)
             dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
@@ -340,6 +340,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                     caminho = datos.caminhoIcone
                 Log.e("teste", "caminho $caminho")
                 }
+                configuraMarkerPersonalizado(caminho, local)
             }
         }
     }
@@ -354,6 +355,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 .snippet(local.telefone)
                 .icon(BitmapDescriptorFactory.fromBitmap(help.bitmapDescriptor(this, caminho!!)))
         )
+        Log.e("teste", "teste imagem ${local.latitude} ${local.longitude}")
         val infoWindow: GoogleMap.InfoWindowAdapter = InfoWindowPersonalizado(this, local)
         mMap.setInfoWindowAdapter(infoWindow)
         addMarker.tag
