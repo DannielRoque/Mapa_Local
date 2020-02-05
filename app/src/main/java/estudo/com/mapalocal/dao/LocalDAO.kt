@@ -145,7 +145,7 @@ class LocalDAO(
 
     fun deleteLocal(local: Local) {
         val db: SQLiteDatabase = writableDatabase
-        val params: Array<String> = arrayOf(local.toString())
+        val params: Array<String> = arrayOf(local.id.toString())
         db.delete("LOCAL", "id =?", params)
     }
 
